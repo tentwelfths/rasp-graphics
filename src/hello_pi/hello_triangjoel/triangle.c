@@ -347,31 +347,31 @@ static void redraw_scene(CUBE_STATE_T *state)
    glBindTexture(GL_TEXTURE_2D, state->tex[0]);
 
    // Need to rotate textures - do this by rotating each cube face
-   glRotatef(270.f, 0.f, 0.f, 1.f ); // front face normal along z axis
+   //glRotatef(270.f, 0.f, 0.f, 1.f ); // front face normal along z axis
 
    // draw first 4 vertices
-   glDrawArrays( GL_TRIANGLE_STRIP, 0, 4);
+   glDrawArrays( GL_TRIANGLES, 0, 6);
 
    // same pattern for other 5 faces - rotation chosen to make image orientation 'nice'
-   glBindTexture(GL_TEXTURE_2D, state->tex[1]);
-   glRotatef(90.f, 0.f, 0.f, 1.f ); // back face normal along z axis
-   glDrawArrays( GL_TRIANGLE_STRIP, 4, 4);
-
-   glBindTexture(GL_TEXTURE_2D, state->tex[2]);
-   glRotatef(90.f, 1.f, 0.f, 0.f ); // left face normal along x axis
-   glDrawArrays( GL_TRIANGLE_STRIP, 8, 4);
-
-   glBindTexture(GL_TEXTURE_2D, state->tex[3]);
-   glRotatef(90.f, 1.f, 0.f, 0.f ); // right face normal along x axis
-   glDrawArrays( GL_TRIANGLE_STRIP, 12, 4);
-
-   glBindTexture(GL_TEXTURE_2D, state->tex[4]);
-   glRotatef(270.f, 0.f, 1.f, 0.f ); // top face normal along y axis
-   glDrawArrays( GL_TRIANGLE_STRIP, 16, 4);
-
-   glBindTexture(GL_TEXTURE_2D, state->tex[5]);
-   glRotatef(90.f, 0.f, 1.f, 0.f ); // bottom face normal along y axis
-   glDrawArrays( GL_TRIANGLE_STRIP, 20, 4);
+   //glBindTexture(GL_TEXTURE_2D, state->tex[1]);
+   //glRotatef(90.f, 0.f, 0.f, 1.f ); // back face normal along z axis
+   //glDrawArrays( GL_TRIANGLE_STRIP, 4, 4);
+   //
+   //glBindTexture(GL_TEXTURE_2D, state->tex[2]);
+   //glRotatef(90.f, 1.f, 0.f, 0.f ); // left face normal along x axis
+   //glDrawArrays( GL_TRIANGLE_STRIP, 8, 4);
+   //
+   //glBindTexture(GL_TEXTURE_2D, state->tex[3]);
+   //glRotatef(90.f, 1.f, 0.f, 0.f ); // right face normal along x axis
+   //glDrawArrays( GL_TRIANGLE_STRIP, 12, 4);
+   //
+   //glBindTexture(GL_TEXTURE_2D, state->tex[4]);
+   //glRotatef(270.f, 0.f, 1.f, 0.f ); // top face normal along y axis
+   //glDrawArrays( GL_TRIANGLE_STRIP, 16, 4);
+   //
+   //glBindTexture(GL_TEXTURE_2D, state->tex[5]);
+   //glRotatef(90.f, 0.f, 1.f, 0.f ); // bottom face normal along y axis
+   //glDrawArrays( GL_TRIANGLE_STRIP, 20, 4);
 
    eglSwapBuffers(state->display, state->surface);
 }

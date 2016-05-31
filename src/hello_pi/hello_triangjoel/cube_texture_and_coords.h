@@ -27,74 +27,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // Spatial coordinates for the cube
 
-static const GLbyte quadx[6*4*3] = {
-   /* FRONT */
-   -10, -10,  10,
-   10, -10,  10,
-   -10,  10,  10,
-   10,  10,  10,
-
-   /* BACK */
-   -10, -10, -10,
-   -10,  10, -10,
-   10, -10, -10,
-   10,  10, -10,
-
-   /* LEFT */
-   -10, -10,  10,
-   -10,  10,  10,
-   -10, -10, -10,
-   -10,  10, -10,
-
-   /* RIGHT */
-   10, -10, -10,
-   10,  10, -10,
-   10, -10,  10,
-   10,  10,  10,
-
-   /* TOP */
-   -10,  10,  10,
-   10,  10,  10,
-   -10,  10, -10,
-   10,  10, -10,
-
-   /* BOTTOM */
-   -10, -10,  10,
-   -10, -10, -10,
-   10, -10,  10,
-   10, -10, -10,
+static const GLbyte quadx[6] = {
+    0.0f, 1.0f, 0.0f,
+    0.0f, 0.0f, 0.0f,
+    1.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f,
+    1.0f, 0.0f, 0.0f,
+    1.0f, 1.0f, 0.0f,
 };
 
 /** Texture coordinates for the quad. */
-static const GLfloat texCoords[6 * 4 * 2] = {
-   0.f,  0.f,
-   0.f,  1.f,
-   1.f,  0.f,
-   1.f,  1.f,
-
-   0.f,  0.f,
-   0.f,  1.f,
-   1.f,  0.f,
-   1.f,  1.f,
-
-   0.f,  0.f,
-   0.f,  1.f,
-   1.f,  0.f,
-   1.f,  1.f,
-
-   0.f,  0.f,
-   0.f,  1.f,
-   1.f,  0.f,
-   1.f,  1.f,
-
-   0.f,  0.f,
-   0.f,  1.f,
-   1.f,  0.f,
-   1.f,  1.f,
-
-   0.f,  0.f,
-   0.f,  1.f,
-   1.f,  0.f,
-   1.f,  1.f
+static const GLfloat texCoords[6] = {
+    0.f, 1.f,
+    0.f, 0.f,
+    1.f, 0.f,
+    0.f, 1.f,
+    1.f, 0.f,
+    1.f, 1.f,
 };
 
