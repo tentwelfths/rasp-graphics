@@ -397,10 +397,10 @@ static void init_textures(CUBE_STATE_T *state)
    // setup first texture
    glBindTexture(GL_TEXTURE_2D, state->tex[0]);
    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, IMAGE_SIZE, IMAGE_SIZE, 0,
-                GL_RGB, GL_UNSIGNED_BYTE, state->tex_buf1);
+                GL_RGBA, GL_UNSIGNED_BYTE, state->tex_buf1);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
-
+/*
    // setup second texture - reuse first image
    glBindTexture(GL_TEXTURE_2D, state->tex[1]);
    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, IMAGE_SIZE, IMAGE_SIZE, 0,
@@ -435,7 +435,7 @@ static void init_textures(CUBE_STATE_T *state)
                 GL_RGB, GL_UNSIGNED_BYTE, state->tex_buf3);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLfloat)GL_NEAREST);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLfloat)GL_NEAREST);
-
+*/
    // setup overall texture environment
    glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -457,20 +457,20 @@ static void init_textures(CUBE_STATE_T *state)
 static void load_tex_images(CUBE_STATE_T *state)
 {
    FILE *tex_file1 = NULL, *tex_file2=NULL, *tex_file3 = NULL;
-   int bytes_read, image_sz = IMAGE_SIZE*IMAGE_SIZE*3;
+   int bytes_read, image_sz = IMAGE_SIZE*IMAGE_SIZE*4;
 
    state->tex_buf1 = malloc(image_sz);
    state->tex_buf2 = malloc(image_sz);
    state->tex_buf3 = malloc(image_sz);
 
-   tex_file1 = fopen(PATH "Lucca_128_128.raw", "rb");
+   tex_file1 = fopen(PATH "testraw.raw", "rb");
    if (tex_file1 && state->tex_buf1)
    {
       bytes_read=fread(state->tex_buf1, 1, image_sz, tex_file1);
       assert(bytes_read == image_sz);  // some problem with file?
       fclose(tex_file1);
    }
-
+/*
    tex_file2 = fopen(PATH "Djenne_128_128.raw", "rb");
    if (tex_file2 && state->tex_buf2)
    {
@@ -485,7 +485,7 @@ static void load_tex_images(CUBE_STATE_T *state)
       bytes_read=fread(state->tex_buf3, 1, image_sz, tex_file3);
       assert(bytes_read == image_sz);  // some problem with file?
       fclose(tex_file3);
-   }   
+   }   */
 }
 
 //------------------------------------------------------------------------------
