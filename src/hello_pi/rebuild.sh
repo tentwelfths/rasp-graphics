@@ -1,3 +1,4 @@
+sudo git pull
 make -C libs/ilclient clean
 make -C libs/vgfont clean
 make -C hello_world clean

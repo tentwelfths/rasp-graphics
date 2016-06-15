@@ -274,7 +274,7 @@ int Init(CUBE_STATE_T *p_state)
    // Load the texture
    userData->textureId = CreateSimpleTexture2D (p_state->width, p_state->height);
 
-   glClearColor ( 0.0f, 0.0f, 0.0f, 0.0f );
+   glClearColor ( 1.0f, 0.0f, 0.0f, 1.0f );
    return GL_TRUE;
 }
 
@@ -385,8 +385,8 @@ void init_ogl(CUBE_STATE_T *state, int width, int height)
     success = graphics_get_display_size(0 /* LCD */, &state->width, &state->height);
     assert( success >= 0 );
 
-    state->width = width;
-    state->height = height;
+    //state->width = width;
+    //state->height = height;
 
     dst_rect.x = 0;
     dst_rect.y = 0;
@@ -395,8 +395,8 @@ void init_ogl(CUBE_STATE_T *state, int width, int height)
 
     src_rect.x = 0;
     src_rect.y = 0;
-    src_rect.width = state->width << 16;
-    src_rect.height = state->height << 16;        
+    src_rect.width = state->width<<16;
+    src_rect.height = state->height<<16;        
 
     dispman_display = vc_dispmanx_display_open( 0 /* LCD */);
     dispman_update = vc_dispmanx_update_start( 0 );
