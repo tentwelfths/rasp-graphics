@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // Spatial coordinates for the cube
 
-static const GLbyte quadx[6] = {
+static const GLbyte quadx[18] = {
     0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 0.0f,
     1.0f, 0.0f, 0.0f,
@@ -37,7 +37,7 @@ static const GLbyte quadx[6] = {
 };
 
 /** Texture coordinates for the quad. */
-static const GLfloat texCoords[6] = {
+static const GLfloat texCoords[12] = {
     0.f, 1.f,
     0.f, 0.f,
     1.f, 0.f,
