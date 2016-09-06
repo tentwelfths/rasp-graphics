@@ -18,8 +18,55 @@
 #define TRUE 1
 #define FALSE 0
 
-typedef struct
-{
+class GraphicsSystem{
+public:
+   GraphicsSystem(){
+
+   }
+   void Draw(){
+      GLfloat vVertices[] = { -0.5f,  0.5f, 0.0f,  // Position 0
+                            0.0f,  0.0f,        // TexCoord 0 
+                           -0.5f, -0.5f, 0.0f,  // Position 1
+                            0.0f,  1.0f,        // TexCoord 1
+                            0.5f, -0.5f, 0.0f,  // Position 2
+                            1.0f,  1.0f,        // TexCoord 2
+                            0.5f,  0.5f, 0.0f,  // Position 3
+                            1.0f,  0.0f         // TexCoord 3
+                         };
+
+   GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
+   //GLushort indices[] = {1, 0, 3, 0, 2, 0, 1 };
+      
+   // Set the viewport
+   glViewport ( 0, 0, width, height );
+   
+   // Clear the color buffer
+   glClear ( GL_COLOR_BUFFER_BIT );
+
+   // Use the program object
+   glUseProgram ( programObject );
+
+   // Load the vertex position
+   glVertexAttribPointer ( positionLoc, 3, GL_FLOAT, 
+                           GL_FALSE, 5 * sizeof(GLfloat), vVertices );
+   // Load the texture coordinate
+   glVertexAttribPointer ( texCoordLoc, 2, GL_FLOAT,
+                           GL_FALSE, 5 * sizeof(GLfloat), &vVertices[3] );
+
+   glEnableVertexAttribArray ( positionLoc );
+   glEnableVertexAttribArray ( texCoordLoc );
+
+   // Bind the texture
+   glActiveTexture ( GL_TEXTURE0 );
+   glBindTexture ( GL_TEXTURE_2D, userData->textureId );
+
+   // Set the sampler texture unit to 0
+   glUniform1i ( userData->samplerLoc, 0 );
+
+   glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices );
+   //glDrawElements ( GL_TRIANGLE_STRIP, 6, GL_UNSIGNED_SHORT, indices );
+   }
+private:
     // Handle to a program object
     GLuint programObject;
 
@@ -32,12 +79,7 @@ typedef struct
 
    // Texture handle
    GLuint textureId;
-
-} UserData;
-
-typedef struct CUBE_STATE_T
-{
-    uint32_t width;
+   uint32_t width;
     uint32_t height;
 
     EGLDisplay display;
@@ -45,9 +87,7 @@ typedef struct CUBE_STATE_T
     EGLContext context;
 
     EGL_DISPMANX_WINDOW_T nativewindow;
-    UserData *user_data;
-    void (*draw_func) (struct CUBE_STATE_T* );
-} CUBE_STATE_T;
+};
 
 char *image;
 int tex;
@@ -285,47 +325,7 @@ void Draw(CUBE_STATE_T *p_state)
 {
    UserData *userData = p_state->user_data;
 
-   GLfloat vVertices[] = { -0.5f,  0.5f, 0.0f,  // Position 0
-                            0.0f,  0.0f,        // TexCoord 0 
-                           -0.5f, -0.5f, 0.0f,  // Position 1
-                            0.0f,  1.0f,        // TexCoord 1
-                            0.5f, -0.5f, 0.0f,  // Position 2
-                            1.0f,  1.0f,        // TexCoord 2
-                            0.5f,  0.5f, 0.0f,  // Position 3
-                            1.0f,  0.0f         // TexCoord 3
-                         };
-
-   GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
-   //GLushort indices[] = {1, 0, 3, 0, 2, 0, 1 };
-      
-   // Set the viewport
-   glViewport ( 0, 0, p_state->width, p_state->height );
    
-   // Clear the color buffer
-   glClear ( GL_COLOR_BUFFER_BIT );
-
-   // Use the program object
-   glUseProgram ( userData->programObject );
-
-   // Load the vertex position
-   glVertexAttribPointer ( userData->positionLoc, 3, GL_FLOAT, 
-                           GL_FALSE, 5 * sizeof(GLfloat), vVertices );
-   // Load the texture coordinate
-   glVertexAttribPointer ( userData->texCoordLoc, 2, GL_FLOAT,
-                           GL_FALSE, 5 * sizeof(GLfloat), &vVertices[3] );
-
-   glEnableVertexAttribArray ( userData->positionLoc );
-   glEnableVertexAttribArray ( userData->texCoordLoc );
-
-   // Bind the texture
-   glActiveTexture ( GL_TEXTURE0 );
-   glBindTexture ( GL_TEXTURE_2D, userData->textureId );
-
-   // Set the sampler texture unit to 0
-   glUniform1i ( userData->samplerLoc, 0 );
-
-   glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices );
-   //glDrawElements ( GL_TRIANGLE_STRIP, 6, GL_UNSIGNED_SHORT, indices );
 }
 
 CUBE_STATE_T state, *p_state = &state;
