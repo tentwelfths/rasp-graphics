@@ -2,7 +2,7 @@
  * code stolen from openGL-RPi-tutorial-master/encode_OGL/
  * and from OpenGL® ES 2.0 Programming Guide
  */
-
+    
 #include <stdio.h>
 #include <assert.h>
 #include <math.h>
