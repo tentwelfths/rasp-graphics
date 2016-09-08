@@ -90,14 +90,14 @@ int Init ( ESContext *esContext )
    esContext->userData = new UserData;	
    UserData *userData = static_cast<UserData *>(esContext->userData);
    char  vShaderStr[] =  
-      "attribute vec4 a_position;   \n"
-      "attribute vec2 a_texCoord;   \n"
-      "varying vec2 v_texCoord;     \n"
-      "void main()                  \n"
-      "{                            \n"
-      "   gl_Position = a_position; \n"
-      "   v_texCoord = 1 - a_texCoord;  \n"
-      "}                            \n";
+      "attribute vec4 a_position;       \n"
+      "attribute vec2 a_texCoord;       \n"
+      "varying vec2 v_texCoord;         \n"
+      "void main()                      \n"
+      "{                                \n"
+      "   gl_Position = a_position;     \n"
+      "   v_texCoord = vec2(a_texCoord.x, 1.0 - a_texCoord.y);  \n"
+      "}                                \n";
    
    char fShaderStr[] =  
       "precision mediump float;                            \n"
