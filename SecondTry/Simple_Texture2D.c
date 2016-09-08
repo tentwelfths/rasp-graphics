@@ -23,7 +23,7 @@
 #include <EGL/eglext.h>
 #include <png.h>
 
-char * png_texture_load(const char * file_name, int * width, int * height);
+unsigned char * png_texture_load(const char * file_name, int * width, int * height);
 typedef struct
 {
    // Handle to a program object
@@ -51,7 +51,7 @@ GLuint CreateSimpleTexture2D( )
    
    // 2x2 Image, 3 bytes per pixel (R, G, B)
    int width, height;
-   char * pixels = png_texture_load("", &width, &height);//esLoadTGA("flag_b24.tga", &width, &height);
+   unsigned char * pixels = png_texture_load("", &width, &height);//esLoadTGA("flag_b24.tga", &width, &height);
    /*{  
       255,   0,   0, // Red
         0, 255,   0, // Green
@@ -211,7 +211,7 @@ int main ( int argc, char *argv[] )
 // This one file (png_texture.cpp) is free and unencumbered software
 // released into the public domain.
 
-char * png_texture_load(const char * file_name, int * width, int * height)
+unsigned char * png_texture_load(const char * file_name, int * width, int * height)
 {
     // This function was originally written by David Grayson for
     // https://github.com/DavidEGrayson/ahrs-visualizer
