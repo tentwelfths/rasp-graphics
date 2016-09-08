@@ -15,7 +15,10 @@
 //    the basics of 2D texturing
 //
 #include <stdlib.h>
+#include <stdio.h>
 #include "esUtil.h"
+
+char* esLoadTGA ( char *fileName, int *width, int *height );
 
 typedef struct
 {
