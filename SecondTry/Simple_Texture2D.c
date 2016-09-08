@@ -23,6 +23,11 @@
 #include <EGL/eglext.h>
 #include <png.h>
 
+class TextureReturn{
+	public:
+	GLint format;
+	unsigned char * pixels;
+};
 TextureReturn png_texture_load(const char * file_name, int * width, int * height);
 typedef struct
 {
@@ -45,11 +50,6 @@ typedef struct
 // Create a simple 2x2 texture image with four different colors
 //
 
-class TextureReturn{
-	public:
-	GLint format;
-	unsigned char * pixels;
-};
 GLuint CreateSimpleTexture2D( )
 {
    // Texture object handle
