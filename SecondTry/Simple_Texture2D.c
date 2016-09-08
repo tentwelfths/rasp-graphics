@@ -43,13 +43,14 @@ GLuint CreateSimpleTexture2D( )
    GLuint textureId;
    
    // 2x2 Image, 3 bytes per pixel (R, G, B)
-   GLubyte pixels[4 * 3] =
-   {  
+   int width, height;
+   GLubyte pixels =esLoadTGA("flag_t16.tga", &width, &height);
+   /*{  
       255,   0,   0, // Red
         0, 255,   0, // Green
         0,   0, 255, // Blue
       255, 255,   0  // Yellow
-   };
+   };*/
 
    // Use tightly packed data
    glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
@@ -61,7 +62,7 @@ GLuint CreateSimpleTexture2D( )
    glBindTexture ( GL_TEXTURE_2D, textureId );
 
    // Load the texture
-   glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels );
+   glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels );
 
    // Set the filtering mode
    glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
@@ -69,6 +70,61 @@ GLuint CreateSimpleTexture2D( )
 
    return textureId;
 
+}
+
+char* esLoadTGA ( char *fileName, int *width, int *height )
+{
+    char *buffer = NULL;
+    FILE *f;
+    unsigned char tgaheader[12];
+    unsigned char attributes[6];
+    unsigned int imagesize;
+
+    f = fopen(fileName, "rb");
+    if(f == NULL) return NULL;
+
+    if(fread(&tgaheader, sizeof(tgaheader), 1, f) == 0)
+    {
+        fclose(f);
+        return NULL;
+    }
+
+    if(fread(attributes, sizeof(attributes), 1, f) == 0)
+    {
+        fclose(f);
+        return 0;
+    }
+
+    *width = attributes[1] * 256 + attributes[0];
+    *height = attributes[3] * 256 + attributes[2];
+    imagesize = attributes[4] / 8 * *width * *height;
+    //imagesize *= 4/3;
+    printf("Origin bits: %d\n", attributes[5] & 030);
+    printf("Pixel depth %d\n", attributes[4]);
+    buffer = malloc(imagesize);
+    if (buffer == NULL)
+    {
+        fclose(f);
+        return 0;
+    }
+
+#if 1
+    // invert - should be reflect, easier is 180 rotate
+    int n = 1;
+    while (n <= imagesize) {
+   fread(&buffer[imagesize - n], 1, 1, f);
+   n++;
+    }
+#else
+    // as is - upside down
+    if(fread(buffer, 1, imagesize, f) != imagesize)
+    {
+        free(buffer);
+        return NULL;
+    }
+#endif
+    fclose(f);
+    return buffer;
 }
 
 
