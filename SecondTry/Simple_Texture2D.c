@@ -57,7 +57,7 @@ GLuint CreateSimpleTexture2D( )
    
    // 2x2 Image, 3 bytes per pixel (R, G, B)
    int width, height;
-   TextureReturn thing = png_texture_load("", &width, &height);//esLoadTGA("flag_b24.tga", &width, &height);
+   TextureReturn thing = png_texture_load("Kakka_Carrot_Veggie.png", &width, &height);//esLoadTGA("flag_b24.tga", &width, &height);
    /*{  
       255,   0,   0, // Red
         0, 255,   0, // Green
