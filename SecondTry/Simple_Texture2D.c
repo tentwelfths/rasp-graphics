@@ -96,7 +96,7 @@ int Init ( ESContext *esContext )
       "void main()                  \n"
       "{                            \n"
       "   gl_Position = a_position; \n"
-      "   v_texCoord = a_texCoord;  \n"
+      "   v_texCoord = 1 - a_texCoord;  \n"
       "}                            \n";
    
    char fShaderStr[] =  
