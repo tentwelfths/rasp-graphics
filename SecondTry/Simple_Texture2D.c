@@ -48,8 +48,7 @@ typedef struct
 class TextureReturn{
 	public:
 	GLint format;
-	unsigned char * 
-        return TextureReturn();;
+	unsigned char * pixels;
 };
 GLuint CreateSimpleTexture2D( )
 {
