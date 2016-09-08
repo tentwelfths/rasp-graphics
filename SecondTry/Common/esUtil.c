@@ -506,11 +506,21 @@ char* ESUTIL_API esLoadTGA ( char *fileName, int *width, int *height )
         return 0;
     }
 
+#if 1
+    // invert - should be reflect, easier is 180 rotate
+    int n = 1;
+    while (n <= imagesize) {
+   fread(&buffer[imagesize - n], 1, 1, f);
+   n++;
+    }
+#else
+    // as is - upside down
     if(fread(buffer, 1, imagesize, f) != imagesize)
     {
         free(buffer);
         return NULL;
     }
+#endif
     fclose(f);
     return buffer;
 }
