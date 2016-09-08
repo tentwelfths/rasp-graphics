@@ -141,8 +141,8 @@ EGLBoolean WinCreate(ESContext *esContext, const char *title)
    VC_RECT_T src_rect;
    
 
-   int display_width;
-   int display_height;
+   unsigned int display_width;
+   unsigned int display_height;
 
    // create an EGL window surface, passing context width/height
    success = graphics_get_display_size(0 /* LCD */, &display_width, &display_height);
