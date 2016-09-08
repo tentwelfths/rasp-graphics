@@ -23,7 +23,7 @@
 #include <EGL/eglext.h>
 #include <png.h>
 
-unsigned char * png_texture_load(const char * file_name, int * width, int * height);
+TextureReturn png_texture_load(const char * file_name, int * width, int * height);
 typedef struct
 {
    // Handle to a program object
@@ -44,6 +44,11 @@ typedef struct
 ///
 // Create a simple 2x2 texture image with four different colors
 //
+
+struct TextureReturn{
+	GLint format;
+	unsigned char * pixels;
+};
 GLuint CreateSimpleTexture2D( )
 {
    // Texture object handle
@@ -51,16 +56,13 @@ GLuint CreateSimpleTexture2D( )
    
    // 2x2 Image, 3 bytes per pixel (R, G, B)
    int width, height;
-   unsigned char * pixels = png_texture_load("", &width, &height);//esLoadTGA("flag_b24.tga", &width, &height);
+   TextureReturn thing = png_texture_load("", &width, &height);//esLoadTGA("flag_b24.tga", &width, &height);
    /*{  
       255,   0,   0, // Red
         0, 255,   0, // Green
         0,   0, 255, // Blue
       255, 255,   0  // Yellow
    };*/
-
-   // Use tightly packed data
-   glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
 
    // Generate a texture object
    glGenTextures ( 1, &textureId );
@@ -69,7 +71,7 @@ GLuint CreateSimpleTexture2D( )
    glBindTexture ( GL_TEXTURE_2D, textureId );
 
    // Load the texture
-   glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels );
+    glTexImage2D(GL_TEXTURE_2D, 0, thing.format, width, height, 0, thing.format, GL_UNSIGNED_BYTE, thing.image_data);
 
    // Set the filtering mode
    glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
@@ -211,7 +213,7 @@ int main ( int argc, char *argv[] )
 // This one file (png_texture.cpp) is free and unencumbered software
 // released into the public domain.
 
-unsigned char * png_texture_load(const char * file_name, int * width, int * height)
+TextureReturn png_texture_load(const char * file_name, int * width, int * height)
 {
     // This function was originally written by David Grayson for
     // https://github.com/DavidEGrayson/ahrs-visualizer
@@ -353,7 +355,12 @@ unsigned char * png_texture_load(const char * file_name, int * width, int * heig
     png_read_image(png_ptr, row_pointers);
     png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
     fclose(fp);
-	return image_data;/*
+	width = temp_width;
+	height = temp_height;
+	TextureReturn thing;
+	thing.format = format;
+	thing.pixels = image_data;
+	return thing;/*
     // Generate the OpenGL texture object
     GLuint texture;
     glGenTextures(1, &texture);
