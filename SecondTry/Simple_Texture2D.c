@@ -48,7 +48,8 @@ typedef struct
 class TextureReturn{
 	public:
 	GLint format;
-	unsigned char * pixels;
+	unsigned char * 
+        return TextureReturn();;
 };
 GLuint CreateSimpleTexture2D( )
 {
@@ -72,7 +73,7 @@ GLuint CreateSimpleTexture2D( )
    glBindTexture ( GL_TEXTURE_2D, textureId );
 
    // Load the texture
-   glTexImage2D(GL_TEXTURE_2D, 0, thing.format, width, height, 0, thing.format, GL_UNSIGNED_BYTE, thing.image_data);
+   glTexImage2D(GL_TEXTURE_2D, 0, thing.format, width, height, 0, thing.format, GL_UNSIGNED_BYTE, thing.pixels);
 
    // Set the filtering mode
    glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
