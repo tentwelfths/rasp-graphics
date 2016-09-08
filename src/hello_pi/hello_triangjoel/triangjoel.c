@@ -2,7 +2,7 @@
  * code stolen from openGL-RPi-tutorial-master/encode_OGL/
  * and from OpenGL® ES 2.0 Programming Guide
  */
-    
+/*
 #include <stdio.h>
 #include <assert.h>
 #include <math.h>
@@ -47,7 +47,7 @@ public:
    glUseProgram ( programObject );
 
    // Load the vertex position
-   glVertexAttribPointer ( positionLoc, 3, GL_FLOAT, 
+   glVertexAttribPointer ( gl, 3, GL_FLOAT, 
                            GL_FALSE, 5 * sizeof(GLfloat), vVertices );
    // Load the texture coordinate
    glVertexAttribPointer ( texCoordLoc, 2, GL_FLOAT,
@@ -382,7 +382,7 @@ void init_ogl(CUBE_STATE_T *state, int width, int height)
     assert(state->context!=EGL_NO_CONTEXT);
 
     // create an EGL window surface
-    success = graphics_get_display_size(0 /* LCD */, &state->width, &state->height);
+    success = graphics_get_display_size(0 , &state->width, &state->height);
     assert( success >= 0 );
 
     //state->width = width;
@@ -398,14 +398,14 @@ void init_ogl(CUBE_STATE_T *state, int width, int height)
     src_rect.width = state->width<<16;
     src_rect.height = state->height<<16;        
 
-    dispman_display = vc_dispmanx_display_open( 0 /* LCD */);
+    dispman_display = vc_dispmanx_display_open( 0 );
     dispman_update = vc_dispmanx_update_start( 0 );
 
     dispman_element = 
    vc_dispmanx_element_add(dispman_update, dispman_display,
-            0/*layer*/, &dst_rect, 0/*src*/,
+            0, &dst_rect, 0,
             &src_rect, DISPMANX_PROTECTION_NONE, 
-            0 /*alpha*/, 0/*clamp*/, 0/*transform*/);
+            0 , 0, 0);
 
     state->nativewindow.element = dispman_element;
     state->nativewindow.width = state->width;
@@ -493,4 +493,151 @@ int main(int argc, char *argv[])
 
     eglSwapBuffers(p_state->display, p_state->surface);
     esMainLoop(p_state);
+}*/
+
+#include "esUtil.h"
+typedef struct
+{
+ // Handle to a program object
+ GLuint programObject;
+} UserData;
+///
+// Create a shader object, load the shader source, and
+// compile the shader.
+//
+GLuint LoadShader(const char *shaderSrc, GLenum type)
+{
+ GLuint shader;
+ GLint compiled;
+
+ // Create the shader object
+ shader = glCreateShader(type);
+ if(shader == 0)
+ return 0;
+ // Load the shader source
+ glShaderSource(shader, 1, &shaderSrc, NULL);
+
+ // Compile the shader
+ glCompileShader(shader);
+ // Check the compile status
+ glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
+ch02.fm Page 21 Thursday, June 19, 2008 3:21 PM
+22 Chapter 2: Hello Triangle: An OpenGL ES 2.0 Example
+ if(!compiled)
+ {
+ GLint infoLen = 0;
+ glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
+
+ if(infoLen > 1)
+ {
+ char* infoLog = malloc(sizeof(char) * infoLen);
+ glGetShaderInfoLog(shader, infoLen, NULL, infoLog);
+ esLogMessage("Error compiling shader:\n%s\n", infoLog);
+ free(infoLog);
+ }
+ glDeleteShader(shader);
+ return 0;
+ }
+ return shader;
+}
+///
+// Initialize the shader and program object
+//
+int Init(ESContext *esContext)
+{
+ UserData *userData = esContext->userData;
+ GLbyte vShaderStr[] =
+ "attribute vec4 vPosition; \n"
+ "void main() \n"
+ "{ \n"
+ " gl_Position = vPosition; \n"
+ "} \n";
+
+ GLbyte fShaderStr[] =
+ "precision mediump float; \n"
+ "void main() \n"
+ "{ \n"
+ " gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); \n"
+ "} \n";
+ GLuint vertexShader;
+ GLuint fragmentShader;
+ GLuint programObject;
+ GLint linked;
+ch02.fm Page 22 Thursday, June 19, 2008 3:21 PM
+Hello Triangle Example 23
+ // Load the vertex/fragment shaders
+ vertexShader = LoadShader(GL_VERTEX_SHADER, vShaderStr);
+ fragmentShader = LoadShader(GL_FRAGMENT_SHADER, fShaderStr);
+ // Create the program object
+ programObject = glCreateProgram();
+ if(programObject == 0)
+ return 0;
+ glAttachShader(programObject, vertexShader);
+ glAttachShader(programObject, fragmentShader);
+ // Bind vPosition to attribute 0
+ glBindAttribLocation(programObject, 0, "vPosition");
+ // Link the program
+ glLinkProgram(programObject);
+ // Check the link status
+ glGetProgramiv(programObject, GL_LINK_STATUS, &linked);
+ if(!linked)
+ {
+ GLint infoLen = 0;
+ glGetProgramiv(programObject, GL_INFO_LOG_LENGTH, &infoLen);
+
+ if(infoLen > 1)
+ {
+ char* infoLog = malloc(sizeof(char) * infoLen);
+ glGetProgramInfoLog(programObject, infoLen, NULL, infoLog);
+ esLogMessage("Error linking program:\n%s\n", infoLog);
+
+ free(infoLog);
+ }
+ glDeleteProgram(programObject);
+ return FALSE;
+ }
+ // Store the program object
+ userData->programObject = programObject;
+ glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+ return TRUE;
+}
+ch02.fm Page 23 Thursday, June 19, 2008 3:21 PM
+24 Chapter 2: Hello Triangle: An OpenGL ES 2.0 Example
+///
+// Draw a triangle using the shader pair created in Init()
+//
+void Draw(ESContext *esContext)
+{
+ UserData *userData = esContext->userData;
+ GLfloat vVertices[] = {0.0f, 0.5f, 0.0f,
+ -0.5f, -0.5f, 0.0f,
+ 0.5f, -0.5f, 0.0f};
+
+ // Set the viewport
+ glViewport(0, 0, esContext->width, esContext->height);
+
+ // Clear the color buffer
+ glClear(GL_COLOR_BUFFER_BIT);
+ // Use the program object
+ glUseProgram(userData->programObject);
+ // Load the vertex data
+ glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vVertices);
+ glEnableVertexAttribArray(0);
+ glDrawArrays(GL_TRIANGLES, 0, 3);
+ eglSwapBuffers(esContext->eglDisplay, esContext->eglSurface);
+}
+int main(int argc, char *argv[])
+{
+ ESContext esContext;
+ UserData userData;
+ esInitialize(&esContext);
+ esContext.userData = &userData;
+ esCreateWindow(&esContext, "Hello Triangle", 320, 240,
+ ES_WINDOW_RGB);
+
+ if(!Init(&esContext))
+ return 0;
+ esRegisterDrawFunc(&esContext, Draw);
+
+ esMainLoop(&esContext);
 }
