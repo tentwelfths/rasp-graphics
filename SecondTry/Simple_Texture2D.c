@@ -47,7 +47,7 @@ GLuint CreateSimpleTexture2D( )
    
    // 2x2 Image, 3 bytes per pixel (R, G, B)
    int width, height;
-   GLubyte pixels =esLoadTGA("flag_t16.tga", &width, &height);
+   char * pixels =esLoadTGA("flag_t16.tga", &width, &height);
    /*{  
       255,   0,   0, // Red
         0, 255,   0, // Green
