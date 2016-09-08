@@ -85,7 +85,7 @@ GLuint CreateSimpleTexture2D( )
 int Init ( ESContext *esContext )
 {
    esContext->userData = new UserData;	
-   UserData *userData = esContext->userData;
+   UserData *userData = static_cast<UserData *>(esContext->userData);
    GLbyte vShaderStr[] =  
       "attribute vec4 a_position;   \n"
       "attribute vec2 a_texCoord;   \n"
@@ -127,7 +127,7 @@ int Init ( ESContext *esContext )
 //
 void Draw ( ESContext *esContext )
 {
-   UserData *userData = esContext->userData;
+   UserData *userData = static_cast<UserData *>(esContext->userData);
    GLfloat vVertices[] = { -0.5f,  0.5f, 0.0f,  // Position 0
                             0.0f,  0.0f,        // TexCoord 0 
                            -0.5f, -0.5f, 0.0f,  // Position 1
@@ -174,7 +174,7 @@ void Draw ( ESContext *esContext )
 //
 void ShutDown ( ESContext *esContext )
 {
-   UserData *userData = esContext->userData;
+   UserData *userData = static_cast<UserData *>(esContext->userData);
 
    // Delete texture object
    glDeleteTextures ( 1, &userData->textureId );
