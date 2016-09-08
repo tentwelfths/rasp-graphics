@@ -72,7 +72,7 @@ int ESUTIL_API esGenSphere ( int numSlices, float radius, GLfloat **vertices, GL
       *texCoords = new GLfloat[2 * numVertices];
 
    if ( indices != NULL )
-      *indices = new GLubyte[numIndices ];
+      *indices = new GLuint[numIndices ];
 
    for ( i = 0; i < numParallels + 1; i++ )
    {
@@ -272,7 +272,7 @@ int ESUTIL_API esGenCube ( float scale, GLfloat **vertices, GLfloat **normals,
          20, 22, 21
       };
 
-      *indices = malloc new GLubyte[numIndices];
+      *indices = new GLubyte[numIndices];
       memcpy( *indices, cubeIndices, sizeof( cubeIndices ) );
    }
 
