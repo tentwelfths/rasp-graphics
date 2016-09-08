@@ -506,7 +506,7 @@ char* ESUTIL_API esLoadTGA ( char *fileName, int *width, int *height )
         return 0;
     }
 
-#if 1
+#if 0
     // invert - should be reflect, easier is 180 rotate
     int n = 1;
     while (n <= imagesize) {
