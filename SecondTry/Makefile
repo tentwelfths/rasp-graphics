@@ -30,4 +30,4 @@ clean:
 	find . -name "CH??_*" | xargs rm -f
 
 ./SRC: ${COMMONSRC} ${COMMONHDR} ${MYSRC}
-	gcc $(CFLAGS) ${COMMONSRC} ${MYSRC} -o ./$@ ${INCDIR} ${LIBS}
+	g++ $(CFLAGS) ${COMMONSRC} ${MYSRC} -o ./$@ ${INCDIR} ${LIBS}
