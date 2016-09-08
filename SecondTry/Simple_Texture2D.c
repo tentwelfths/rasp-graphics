@@ -45,7 +45,8 @@ typedef struct
 // Create a simple 2x2 texture image with four different colors
 //
 
-struct TextureReturn{
+class TextureReturn{
+	public:
 	GLint format;
 	unsigned char * pixels;
 };
