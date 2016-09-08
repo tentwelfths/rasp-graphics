@@ -84,7 +84,7 @@ GLuint CreateSimpleTexture2D( )
 //
 int Init ( ESContext *esContext )
 {
-   esContext->userData = malloc(sizeof(UserData));	
+   esContext->userData = new UserData;	
    UserData *userData = esContext->userData;
    GLbyte vShaderStr[] =  
       "attribute vec4 a_position;   \n"

@@ -63,16 +63,16 @@ int ESUTIL_API esGenSphere ( int numSlices, float radius, GLfloat **vertices, GL
 
    // Allocate memory for buffers
    if ( vertices != NULL )
-      *vertices = malloc ( sizeof(GLfloat) * 3 * numVertices );
+      *vertices = new GLfloat[3 * numVertices];
    
    if ( normals != NULL )
-      *normals = malloc ( sizeof(GLfloat) * 3 * numVertices );
+      *normals = new GLfloat[3 * numVertices];
 
    if ( texCoords != NULL )
-      *texCoords = malloc ( sizeof(GLfloat) * 2 * numVertices );
+      *texCoords = new GLfloat[2 * numVertices];
 
    if ( indices != NULL )
-      *indices = malloc ( sizeof(GLuint) * numIndices );
+      *indices = new GLubyte[numIndices ];
 
    for ( i = 0; i < numParallels + 1; i++ )
    {
@@ -232,7 +232,7 @@ int ESUTIL_API esGenCube ( float scale, GLfloat **vertices, GLfloat **normals,
    // Allocate memory for buffers
    if ( vertices != NULL )
    {
-      *vertices = malloc ( sizeof(GLfloat) * 3 * numVertices );
+      *vertices =new GLfloat[3 * numVertices];
       memcpy( *vertices, cubeVerts, sizeof( cubeVerts ) );
       for ( i = 0; i < numVertices * 3; i++ )
       {
@@ -242,13 +242,13 @@ int ESUTIL_API esGenCube ( float scale, GLfloat **vertices, GLfloat **normals,
 
    if ( normals != NULL )
    {
-      *normals = malloc ( sizeof(GLfloat) * 3 * numVertices );
+      *normals = new GLfloat[3 * numVertices];
       memcpy( *normals, cubeNormals, sizeof( cubeNormals ) );
    }
 
    if ( texCoords != NULL )
    {
-      *texCoords = malloc ( sizeof(GLfloat) * 2 * numVertices );
+      *texCoords = new GLfloat[2 * numVertices];
       memcpy( *texCoords, cubeTex, sizeof( cubeTex ) ) ;
    }
 
@@ -272,7 +272,7 @@ int ESUTIL_API esGenCube ( float scale, GLfloat **vertices, GLfloat **normals,
          20, 22, 21
       };
 
-      *indices = malloc ( sizeof(GLubyte) * numIndices );
+      *indices = malloc new GLubyte[numIndices];
       memcpy( *indices, cubeIndices, sizeof( cubeIndices ) );
    }
 

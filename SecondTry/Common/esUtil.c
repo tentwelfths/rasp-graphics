@@ -499,7 +499,7 @@ char* ESUTIL_API esLoadTGA ( char *fileName, int *width, int *height )
     *width = attributes[1] * 256 + attributes[0];
     *height = attributes[3] * 256 + attributes[2];
     imagesize = attributes[4] / 8 * *width * *height;
-    buffer = malloc(imagesize);
+    buffer = new char[imagesize];
     if (buffer == NULL)
     {
         fclose(f);
