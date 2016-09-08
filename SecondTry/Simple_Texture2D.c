@@ -86,7 +86,7 @@ int Init ( ESContext *esContext )
 {
    esContext->userData = new UserData;	
    UserData *userData = static_cast<UserData *>(esContext->userData);
-   GLbyte vShaderStr[] =  
+   unsigned char  vShaderStr[] =  
       "attribute vec4 a_position;   \n"
       "attribute vec2 a_texCoord;   \n"
       "varying vec2 v_texCoord;     \n"
@@ -96,7 +96,7 @@ int Init ( ESContext *esContext )
       "   v_texCoord = a_texCoord;  \n"
       "}                            \n";
    
-   GLbyte fShaderStr[] =  
+   unsigned char fShaderStr[] =  
       "precision mediump float;                            \n"
       "varying vec2 v_texCoord;                            \n"
       "uniform sampler2D s_texture;                        \n"
