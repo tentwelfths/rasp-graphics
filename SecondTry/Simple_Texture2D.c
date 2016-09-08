@@ -71,7 +71,7 @@ GLuint CreateSimpleTexture2D( )
    glBindTexture ( GL_TEXTURE_2D, textureId );
 
    // Load the texture
-    glTexImage2D(GL_TEXTURE_2D, 0, thing.format, width, height, 0, thing.format, GL_UNSIGNED_BYTE, thing.image_data);
+   glTexImage2D(GL_TEXTURE_2D, 0, thing.format, width, height, 0, thing.format, GL_UNSIGNED_BYTE, thing.image_data);
 
    // Set the filtering mode
    glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
@@ -355,8 +355,8 @@ TextureReturn png_texture_load(const char * file_name, int * width, int * height
     png_read_image(png_ptr, row_pointers);
     png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
     fclose(fp);
-	width = temp_width;
-	height = temp_height;
+	*width = temp_width;
+	*height = temp_height;
 	TextureReturn thing;
 	thing.format = format;
 	thing.pixels = image_data;
