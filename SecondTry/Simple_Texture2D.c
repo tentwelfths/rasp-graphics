@@ -224,7 +224,7 @@ TextureReturn png_texture_load(const char * file_name, int * width, int * height
     if (fp == 0)
     {
         perror(file_name);
-        return 0;
+        return TextureReturn();
     }
 
     // read the header
@@ -234,7 +234,7 @@ TextureReturn png_texture_load(const char * file_name, int * width, int * height
     {
         fprintf(stderr, "error: %s is not a PNG.\n", file_name);
         fclose(fp);
-        return 0;
+        return TextureReturn();
     }
 
     png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
@@ -242,7 +242,7 @@ TextureReturn png_texture_load(const char * file_name, int * width, int * height
     {
         fprintf(stderr, "error: png_create_read_struct returned 0.\n");
         fclose(fp);
-        return 0;
+        return TextureReturn();
     }
 
     // create png info struct
@@ -252,7 +252,7 @@ TextureReturn png_texture_load(const char * file_name, int * width, int * height
         fprintf(stderr, "error: png_create_info_struct returned 0.\n");
         png_destroy_read_struct(&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
         fclose(fp);
-        return 0;
+        return TextureReturn();
     }
 
     // create png info struct
@@ -262,7 +262,7 @@ TextureReturn png_texture_load(const char * file_name, int * width, int * height
         fprintf(stderr, "error: png_create_info_struct returned 0.\n");
         png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp) NULL);
         fclose(fp);
-        return 0;
+        return TextureReturn();
     }
 
     // the code in this if statement gets called if libpng encounters an error
@@ -270,7 +270,7 @@ TextureReturn png_texture_load(const char * file_name, int * width, int * height
         fprintf(stderr, "error from libpng\n");
         png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
         fclose(fp);
-        return 0;
+        return TextureReturn();
     }
 
     // init png reading
@@ -298,7 +298,7 @@ TextureReturn png_texture_load(const char * file_name, int * width, int * height
     if (bit_depth != 8)
     {
         fprintf(stderr, "%s: Unsupported bit depth %d.  Must be 8.\n", file_name, bit_depth);
-        return 0;
+        return TextureReturn();
     }
 
     GLint format;
@@ -312,7 +312,7 @@ TextureReturn png_texture_load(const char * file_name, int * width, int * height
         break;
     default:
         fprintf(stderr, "%s: Unknown libpng color type %d.\n", file_name, color_type);
-        return 0;
+        return TextureReturn();
     }
 
     // Update the png info struct.
@@ -331,7 +331,7 @@ TextureReturn png_texture_load(const char * file_name, int * width, int * height
         fprintf(stderr, "error: could not allocate memory for PNG image data\n");
         png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
         fclose(fp);
-        return 0;
+        return TextureReturn();
     }
 
     // row_pointers is for pointing to image_data for reading the png with libpng
@@ -342,7 +342,7 @@ TextureReturn png_texture_load(const char * file_name, int * width, int * height
         png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
         free(image_data);
         fclose(fp);
-        return 0;
+        return TextureReturn();
     }
 
     // set the individual row_pointers to point at the correct offsets of image_data
