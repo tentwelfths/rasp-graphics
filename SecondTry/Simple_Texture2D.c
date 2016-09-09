@@ -92,9 +92,14 @@ int Init ( ESContext *esContext )
    char  vShaderStr[] =  
       "attribute vec4 a_position;       \n"
       "attribute vec2 a_texCoord;       \n"
+	  "attribute mat4 Scale;\n"
+	  "attribute mat4 Rotation;\n"
+	  "attribute mat4 View;\n"
+	  "attribute mat4 Projection;\n"
       "varying vec2 v_texCoord;         \n"
       "void main()                      \n"
       "{                                \n"
+	  "   mat4 MVP = Projection * View * a_position * Rotation * Scale;\n"
       "   gl_Position = a_position;     \n"
       "   v_texCoord = vec2(a_texCoord.x, 1.0 - a_texCoord.y);  \n"
       "}                                \n";
@@ -154,6 +159,7 @@ void Draw ( ESContext *esContext )
    // Use the program object
    glUseProgram ( userData->programObject );
 
+   
    // Load the vertex position
    glVertexAttribPointer ( userData->positionLoc, 3, GL_FLOAT, 
                            GL_FALSE, 5 * sizeof(GLfloat), vVertices );
