@@ -136,7 +136,7 @@ GraphicsSystem::GraphicsSystem()
   char  vShaderStr[] =  
     "attribute vec3 vertexPosition_modelspace;       \n"
     "attribute vec2 vertexUV;       \n"
-    "varying vec2 UV;         \n"
+    "varying vec2 v_texCoord;         \n"
     "uniform mat4 Position;\n"
     "uniform mat4 Scale;\n"
     "uniform mat4 Rotation;\n"
@@ -147,16 +147,16 @@ GraphicsSystem::GraphicsSystem()
     //"  mat4 MVP = Projection * View * Position * Rotation * Scale;\n"
     "  // Output position of the vertex, in clip space : MVP * position\n"
     "  gl_Position =  /*MVP * */vec4(vertexPosition_modelspace,1);\n"
-    "  UV = vec2(vertexUV.x, 1.0 - vertexUV.y);  \n"
+    "  v_texCoord = vec2(vertexUV.x, 1.0 - vertexUV.y);  \n"
     "}                                \n";
    
   char fShaderStr[] =  
     "precision mediump float;                            \n"
-    "varying vec2 UV;                            \n"
+    "varying vec2 v_texCoord;                            \n"
     "uniform sampler2D myTextureSampler;                        \n"
     "void main()                                         \n"
     "{                                                   \n"
-    "  gl_FragColor = texture2D( myTextureSampler, UV );\n"
+    "  gl_FragColor = texture2D( myTextureSampler, v_texCoord );\n"
     "}                                                   \n";
   
 
