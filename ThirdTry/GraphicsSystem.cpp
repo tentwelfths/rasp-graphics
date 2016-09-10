@@ -263,6 +263,7 @@ void GraphicsSystem::Draw()
     glUniform1i ( Texture, 0 );
 
     glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices_ );
+    std::cout<<"err: "<<glGetError()<<std::endl;
   }
   eglSwapBuffers(eglDisplay, eglSurface);
 }
