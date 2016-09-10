@@ -208,11 +208,6 @@ GLboolean GraphicsSystem::CreateWindow()
        EGL_NONE
    };
    
-   if ( esContext == NULL )
-   {
-      return GL_FALSE;
-   }
-
 
    if ( !WinCreate () )
    {
