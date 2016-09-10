@@ -1,6 +1,7 @@
 #include "GraphicsSystem.h"
+#include "Object.h"
 
-GLfloat[][4] setUpRotationMatrix(GLfloat rotationMatrix[][4], float angle, float u, float v, float w);
+void setUpRotationMatrix(GLfloat ** rotationMatrix, float angle, float u, float v, float w);
 
 GraphicsSystem::GraphicsSystem()
 {
@@ -9,7 +10,7 @@ GraphicsSystem::GraphicsSystem()
 #endif
   int32_t success = 0;
   
-  CreateWindow();
+  //CreateWindow();
   
   char  vShaderStr[] =  
     "attribute vec3 vertexPosition_modelspace;       \n"
@@ -67,8 +68,8 @@ GraphicsSystem::GraphicsSystem()
     program = LoadProgram(vShaderStr, fShaderStr);
   
   Position_worldspace = glGetUniformLocation(program, "Position");
-  Scale = glGetUniformLocation(program, "Scale");
-  Rotation = glGetUniformLocation(program, "Rotation");
+  Scale_ = glGetUniformLocation(program, "Scale");
+  Rotation_ = glGetUniformLocation(program, "Rotation");
   View = glGetUniformLocation(program, "View");
   Projection = glGetUniformLocation(program, "Projection");
   Position_modelspace = glGetAttribLocation(program, "vertexPosition_modelspace");
@@ -80,10 +81,10 @@ GraphicsSystem::GraphicsSystem()
   
     // Load the vertex position
   glVertexAttribPointer ( Position_modelspace, 3, GL_FLOAT, 
-                          GL_FALSE, 5 * sizeof(GLfloat), vVerts );
+                          GL_FALSE, 5 * sizeof(GLfloat), vVerts_ );
   // Load the texture coordinate
   glVertexAttribPointer ( VertexUV, 2, GL_FLOAT,
-                          GL_FALSE, 5 * sizeof(GLfloat), &vVerts[3] );
+                          GL_FALSE, 5 * sizeof(GLfloat), &vVerts_[3] );
 
   glEnableVertexAttribArray ( Position_modelspace );
   glEnableVertexAttribArray ( VertexUV );
@@ -93,7 +94,7 @@ GraphicsSystem::GraphicsSystem()
 
 void GraphicsSystem::Draw()
 {
-  for(int i = 0; i < gObjects.length(); ++i)
+  for(int i = 0; i < gObjects.size(); ++i)
   {
     GLfloat Position[] = {
         1.0f, 0.0f, 0.0f, 0.0f,
@@ -101,9 +102,9 @@ void GraphicsSystem::Draw()
         0.0f, 0.0f, 1.0f, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f,
     };
-    Position[3][0] = gObjects[i]->scale[0];
-    Position[3][1] = gObjects[i]->scale[1];
-    Position[3][2] = gObjects[i]->scale[2];
+    Position[3] = gObjects[i]->scale[0];
+    Position[7] = gObjects[i]->scale[1];
+    Position[11] = gObjects[i]->scale[2];
 
     GLfloat Rotation[] = {
         1.0f, 0.0f, 0.0f, 0.0f,
@@ -118,24 +119,24 @@ void GraphicsSystem::Draw()
         0.0f, 0.0f, 0.0f, 1.0f,
     };
 
-    Scale[0][0] = gObjects[i]->scale[0];
-    Scale[1][1] = gObjects[i]->scale[1];
-    Scale[2][2] = gObjects[i]->scale[2];
+    Scale[0] = gObjects[i]->scale[0];
+    Scale[5] = gObjects[i]->scale[1];
+    Scale[10] = gObjects[i]->scale[2];
     
-    Rotation = setUpRotationMatrix(Rotation, gObjects[i]->scale[0], 1, 0, 0);
-    Rotation = setUpRotationMatrix(Rotation, gObjects[i]->scale[1], 0, 1, 0);
-    Rotation = setUpRotationMatrix(Rotation, gObjects[i]->scale[2], 0, 0, 1);
+    setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[0], 1, 0, 0);
+    setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[1], 0, 1, 0);
+    setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[2], 0, 0, 1);
     
     glBindTexture ( GL_TEXTURE_2D, gObjects[i]->textureID );
 
     // Set the sampler texture unit to 0
     glUniform1i ( Texture, 0 );
 
-    glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices );
+    glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices_ );
   }
 }
 
-GLuint LoadProgram(const char * vertSrc, const char * fragSrc)
+GLuint GraphicsSystem::LoadProgram(const char * vertSrc, const char * fragSrc)
 {
    GLuint programObject;
    GLint linked;
@@ -178,7 +179,7 @@ GLuint LoadProgram(const char * vertSrc, const char * fragSrc)
          char* infoLog = new char[infoLen];
 
          glGetProgramInfoLog ( programObject, infoLen, NULL, infoLog );
-         esLogMessage ( "Error linking program:\n%s\n", infoLog );            
+         printf ( "Error linking program:\n%s\n", infoLog );            
          
          free ( infoLog );
       }
@@ -236,7 +237,7 @@ GLboolean GraphicsSystem::CreateWindow()
 //
 //      This function initialized the display and window for EGL
 //
-EGLBoolean GraphicsSystem::WinCreate() 
+bool GraphicsSystem::WinCreate() 
 {
    int32_t success = 0;
 
@@ -256,7 +257,7 @@ EGLBoolean GraphicsSystem::WinCreate()
    success = graphics_get_display_size(0 /* LCD */, &display_width, &display_height);
    if ( success < 0 )
    {
-      return EGL_FALSE;
+      return false;
    }
    
    // You can hardcode the resolution here:
@@ -289,7 +290,7 @@ EGLBoolean GraphicsSystem::WinCreate()
    
    hWnd = &nativewindow;
 
-	return EGL_TRUE;
+	return true;
 }
 ///
 //  userInterrupt()
@@ -312,7 +313,7 @@ GLboolean GraphicsSystem::userInterrupt()
 //
 //      This function initialized the native X11 display and window for EGL
 //
-EGLBoolean GraphicsSystem::GraphicsSystem::WinCreate()
+bool GraphicsSystem::GraphicsSystem::WinCreate()
 {
     Window root;
     XSetWindowAttributes swa;
@@ -331,7 +332,7 @@ EGLBoolean GraphicsSystem::GraphicsSystem::WinCreate()
     x_display = XOpenDisplay(NULL);
     if ( x_display == NULL )
     {
-        return GL_FALSE;
+        return false;
     }
 
     root = DefaultRootWindow(x_display);
@@ -373,7 +374,7 @@ EGLBoolean GraphicsSystem::GraphicsSystem::WinCreate()
        &xev );
 
     hWnd = (EGLNativeWindowType) win;
-    return GL_TRUE;
+    return true;
 }
 
 
@@ -421,7 +422,7 @@ void GraphicsSystem::LoadPngToTexture(const char * filename)
   TextureType t;
   t.name = temp;
   t.textureID = myPNG;
-  mTextures.push_back(t);
+  mTextures.insert({temp, t});
 }
 
 
@@ -580,7 +581,7 @@ GLint GraphicsSystem::loadpng(const char * file_name)
     return texture;
 }
 
-GLfloat[][4] setUpRotationMatrix(GLfloat rotationMatrix[][4], float angle, float u, float v, float w)
+void setUpRotationMatrix(GLfloat ** rotationMatrix, float angle, float u, float v, float w)
 {
   float L = (u*u + v * v + w * w);
   angle = angle * 3.14159 / 180.0; //converting to radian value
@@ -588,24 +589,24 @@ GLfloat[][4] setUpRotationMatrix(GLfloat rotationMatrix[][4], float angle, float
   float v2 = v * v;
   float w2 = w * w;
 
-  rotationMatrix[0][0] = (u2 + (v2 + w2) * cos(angle)) / L;
-  rotationMatrix[1][0] = (u * v * (1 - cos(angle)) - w * sqrt(L) * sin(angle)) / L;
-  rotationMatrix[2][0] = (u * w * (1 - cos(angle)) + v * sqrt(L) * sin(angle)) / L;
-  rotationMatrix[3][0] = 0.0;
+  (*rotationMatrix)[0] = (u2 + (v2 + w2) * cos(angle)) / L;
+  (*rotationMatrix)[4] = (u * v * (1 - cos(angle)) - w * sqrt(L) * sin(angle)) / L;
+  (*rotationMatrix)[8] = (u * w * (1 - cos(angle)) + v * sqrt(L) * sin(angle)) / L;
+  (*rotationMatrix)[12] = 0.0;
 
-  rotationMatrix[0][1] = (u * v * (1 - cos(angle)) + w * sqrt(L) * sin(angle)) / L;
-  rotationMatrix[1][1] = (v2 + (u2 + w2) * cos(angle)) / L;
-  rotationMatrix[2][1] = (v * w * (1 - cos(angle)) - u * sqrt(L) * sin(angle)) / L;
-  rotationMatrix[3][1] = 0.0;
+  (*rotationMatrix)[1] = (u * v * (1 - cos(angle)) + w * sqrt(L) * sin(angle)) / L;
+  (*rotationMatrix)[5] = (v2 + (u2 + w2) * cos(angle)) / L;
+  (*rotationMatrix)[9] = (v * w * (1 - cos(angle)) - u * sqrt(L) * sin(angle)) / L;
+  (*rotationMatrix)[13] = 0.0;
 
-  rotationMatrix[0][2] = (u * w * (1 - cos(angle)) - v * sqrt(L) * sin(angle)) / L;
-  rotationMatrix[1][2] = (v * w * (1 - cos(angle)) + u * sqrt(L) * sin(angle)) / L;
-  rotationMatrix[2][2] = (w2 + (u2 + v2) * cos(angle)) / L;
-  rotationMatrix[3][2] = 0.0;
+  (*rotationMatrix)[2] = (u * w * (1 - cos(angle)) - v * sqrt(L) * sin(angle)) / L;
+  (*rotationMatrix)[6] = (v * w * (1 - cos(angle)) + u * sqrt(L) * sin(angle)) / L;
+  (*rotationMatrix)[10] = (w2 + (u2 + v2) * cos(angle)) / L;
+  (*rotationMatrix)[14] = 0.0;
 
-  rotationMatrix[0][3] = 0.0;
-  rotationMatrix[1][3] = 0.0;
-  rotationMatrix[2][3] = 0.0;
-  rotationMatrix[3][3] = 1.0;
-  return rotationMatrix;
+  (*rotationMatrix)[3] = 0.0;
+  (*rotationMatrix)[7] = 0.0;
+  (*rotationMatrix)[11] = 0.0;
+  (*rotationMatrix)[15] = 1.0;
+  return;
 }

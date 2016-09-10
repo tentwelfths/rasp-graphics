@@ -13,6 +13,7 @@
 #include <sys/time.h>
 
 #include <vector>
+#include <unordered_map>
 
 #ifdef RPI_NO_X
 #include  "bcm_host.h"
@@ -64,7 +65,7 @@ public:
   void KeyPress();
   void Update(float dt);
   
-  void LoadProgram(const char * vertSrc,const char * fragSrc);
+  GLuint LoadProgram(const char * vertSrc,const char * fragSrc);
   
   void LoadPngToTexture(const char * filename);
   
@@ -77,7 +78,7 @@ public:
   /// Window height
   GLint       height;
 
-  GLuint View,Projection,Position_modelspace,Position_worldspace,Scale,Rotation,Texture;
+  GLuint View,Projection,Position_modelspace,Position_worldspace,Scale_,Rotation_,Texture,VertexUV;
   
   /// Window handle
   EGLNativeWindowType  hWnd;
@@ -91,13 +92,13 @@ public:
   /// EGL surface
   EGLSurface  eglSurface;
   
-  std::vector<TextureType> mTextures;
+  std::unordered_map<std::string, TextureType> mTextures;
   
   GLfloat vVerts_[20];
   
   GLushort indices_[6];
 private:
   GLint loadpng(const char * filename);
-  EGLboolean WinCreate();
+  bool WinCreate();
   GLboolean userInterrupt();
 };

@@ -24,4 +24,4 @@ clean:
 	find . -name "CH??_*" | xargs rm -f
 
 ./SRC: ${MYSRC}
-	g++ $(CFLAGS) ${COMMONSRC} ${MYSRC} -o ./$@ ${INCDIR} ${LIBS}
+	g++ -std=c++11 $(CFLAGS) ${COMMONSRC} ${MYSRC} -o ./$@ ${INCDIR} ${LIBS}
