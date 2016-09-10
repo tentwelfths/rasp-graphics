@@ -14,12 +14,6 @@ CFLAGS+=-DRPI_NO_X
 
 
 
-COMMONSRC=./Common/esShader.c    \
-          ./Common/esTransform.c \
-          ./Common/esShapes.c    \
-          ./Common/esUtil.c
-COMMONHRD=esUtil.h
-
 MYSRC=./main.cpp GraphicsSystem.cpp
 
 default: all
@@ -29,5 +23,5 @@ all: ./SRC
 clean:
 	find . -name "CH??_*" | xargs rm -f
 
-./SRC: ${COMMONSRC} ${COMMONHDR} ${MYSRC}
+./SRC: ${MYSRC}
 	g++ $(CFLAGS) ${COMMONSRC} ${MYSRC} -o ./$@ ${INCDIR} ${LIBS}
