@@ -166,6 +166,8 @@ GraphicsSystem::GraphicsSystem()
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glClearColor ( 1.0f, 0.0f, 1.0f, 1.0f );
+  
+  
   GLfloat vVertices[] = { -0.5f,  0.5f, 0.0f,  // Position 0
                             0.0f,  0.0f,        // TexCoord 0 
                            -0.5f, -0.5f, 0.0f,  // Position 1
@@ -215,6 +217,10 @@ GraphicsSystem::GraphicsSystem()
 
 void GraphicsSystem::Draw()
 {
+  
+  // Clear the color buffer
+  glClear ( GL_COLOR_BUFFER_BIT );
+   
   for(int i = 0; i < gObjects.size(); ++i)
   {
     GLfloat Position[] = {
