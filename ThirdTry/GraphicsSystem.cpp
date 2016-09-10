@@ -80,7 +80,7 @@ bool CreateEGLContext ( EGLNativeWindowType hWnd, EGLDisplay* eglDisplay,
    return true;
 } 
 
-GLuint ESUTIL_API esLoadShader ( GLenum type, const char *shaderSrc )
+GLuint  esLoadShader ( GLenum type, const char *shaderSrc )
 {
    GLuint shader;
    GLint compiled;
@@ -111,7 +111,7 @@ GLuint ESUTIL_API esLoadShader ( GLenum type, const char *shaderSrc )
          char* infoLog = new char[infoLen];
 
          glGetShaderInfoLog ( shader, infoLen, NULL, infoLog );
-         esLogMessage ( "Error compiling shader:\n%s\n", infoLog );            
+         printf ( "Error compiling shader:\n%s\n", infoLog );            
          
          free ( infoLog );
       }
@@ -245,9 +245,9 @@ void GraphicsSystem::Draw()
     Scale[10] = gObjects[i]->scale[2];
     
     setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[0], 1, 0, 0);
-    setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[1], 0, 1, 0);
-    setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[2], 0, 0, 1);
-    
+    //setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[1], 0, 1, 0);
+    //setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[2], 0, 0, 1);
+
     glBindTexture ( GL_TEXTURE_2D, gObjects[i]->textureID );
 
     // Set the sampler texture unit to 0
@@ -710,7 +710,7 @@ void setUpRotationMatrix(GLfloat ** rotationMatrix, float angle, float u, float 
   float v2 = v * v;
   float w2 = w * w;
 
-  (*rotationMatrix)[0] = (u2 + (v2 + w2) * cos(angle)) / L;
+/*  (*rotationMatrix)[0] = (u2 + (v2 + w2) * cos(angle)) / L;
   (*rotationMatrix)[4] = (u * v * (1 - cos(angle)) - w * sqrt(L) * sin(angle)) / L;
   (*rotationMatrix)[8] = (u * w * (1 - cos(angle)) + v * sqrt(L) * sin(angle)) / L;
   (*rotationMatrix)[12] = 0.0;
@@ -728,6 +728,6 @@ void setUpRotationMatrix(GLfloat ** rotationMatrix, float angle, float u, float 
   (*rotationMatrix)[3] = 0.0;
   (*rotationMatrix)[7] = 0.0;
   (*rotationMatrix)[11] = 0.0;
-  (*rotationMatrix)[15] = 1.0;
+  (*rotationMatrix)[15] = 1.0;*/
   return;
 }
