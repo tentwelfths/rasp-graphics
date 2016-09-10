@@ -156,7 +156,7 @@ GraphicsSystem::GraphicsSystem()
     "uniform sampler2D myTextureSampler;                        \n"
     "void main()                                         \n"
     "{                                                   \n"
-    "  gl_FragColor = texture2D( myTextureSampler, UV ).rgba;\n"
+    "  gl_FragColor = vec4(1,1,0,1);//gl_FragColor = texture2D( myTextureSampler, UV ).rgba;\n"
     "}                                                   \n";
   
 
