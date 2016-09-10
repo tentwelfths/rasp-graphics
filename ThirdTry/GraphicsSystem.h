@@ -12,6 +12,8 @@
 #include <stdarg.h>
 #include <sys/time.h>
 
+#include <vector>
+
 #ifdef RPI_NO_X
 #include  "bcm_host.h"
 #else
@@ -23,6 +25,29 @@
 #ifndef RPI_NO_X
 // X11 related local variables
 static Display *x_display = NULL;
+#endif
+
+/// esCreateWindow flag - RGB color buffer
+#define ES_WINDOW_RGB           0
+/// esCreateWindow flag - ALPHA color buffer
+#define ES_WINDOW_ALPHA         1 
+/// esCreateWindow flag - depth buffer
+#define ES_WINDOW_DEPTH         2 
+/// esCreateWindow flag - stencil buffer
+#define ES_WINDOW_STENCIL       4
+/// esCreateWindow flat - multi-sample buffer
+#define ES_WINDOW_MULTISAMPLE   8
+
+
+///
+// Types
+//
+
+#ifndef FALSE
+#define FALSE 0
+#endif
+#ifndef TRUE
+#define TRUE 1
 #endif
 
 struct TextureType{

@@ -1,4 +1,5 @@
 #include "GraphicsSystem.h"
+#include "Object.h"
 std::vector<Object*> gObjects;
 int main ( int argc, char *argv[] )
 {
