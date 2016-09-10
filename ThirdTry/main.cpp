@@ -11,7 +11,7 @@ int main ( int argc, char *argv[] )
   a->position[1] = 0;
   a->scale[0] = 30;
   a->scale[1]  = 10;
-  a->textureID = g.mTextures["Kakka_Carrot_Veggie.png"].textureID;
+  a->textureID = g.mTextures["Kakka_Carrot_Veggie"].textureID;
   gObjects.push_back(a);
   
   while(true){
