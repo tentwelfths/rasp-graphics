@@ -1,5 +1,7 @@
 #include "GraphicsSystem.h"
 
+GLfloat[4][4] setUpRotationMatrix(GLfloat rotationMatrix[4][4], float angle, float u, float v, float w);
+
 GraphicsSystem::GraphicsSystem()
 {
 #ifdef RPI_NO_X
@@ -10,29 +12,186 @@ GraphicsSystem::GraphicsSystem()
   CreateWindow();
   
   char  vShaderStr[] =  
-    "attribute vec4 a_position;       \n"
-    "attribute vec2 a_texCoord;       \n"
-    "varying vec2 v_texCoord;         \n"
-    "void main()                      \n"
-    "{                                \n"
-    "   gl_Position = a_position;     \n"
-    "   v_texCoord = vec2(a_texCoord.x, 1.0 - a_texCoord.y);  \n"
+    "attribute vec3 vertexPosition_modelspace;       \n"
+    "attribute vec2 vertexUV;       \n"
+    "varying vec2 UV;         \n"
+    "uniform mat4 Position;\n"
+    "uniform mat4 Scale;\n"
+    "uniform mat4 Rotation;\n"
+    "uniform mat4 View;\n"
+    "uniform mat4 Projection;\n"
+    "\n"
+    "void main(){\n"
+    "  mat4 MVP = Projection * View * Position * Rotation * Scale;\n"
+    "  // Output position of the vertex, in clip space : MVP * position\n"
+    "  gl_Position =  MVP * vec4(vertexPosition_modelspace,1);\n"
+    "  UV = vec2(vertexUV.x, 1.0 - vertexUV.y);  \n"
     "}                                \n";
    
   char fShaderStr[] =  
     "precision mediump float;                            \n"
-    "varying vec2 v_texCoord;                            \n"
-    "uniform sampler2D s_texture;                        \n"
+    "varying vec2 UV;                            \n"
+    "uniform sampler2D myTextureSampler;                        \n"
     "void main()                                         \n"
     "{                                                   \n"
-    "  gl_FragColor = texture2D( s_texture, v_texCoord );\n"
+    "  gl_FragColor = texture2D( myTextureSampler, UV ).rgba;\n"
     "}                                                   \n";
+  
+
   
   glEnable(GL_CULL_FACE);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glClearColor ( 1.0f, 0.0f, 1.0f, 1.0f );
+  GLfloat vVertices[] = { -0.5f,  0.5f, 0.0f,  // Position 0
+                            0.0f,  0.0f,        // TexCoord 0 
+                           -0.5f, -0.5f, 0.0f,  // Position 1
+                            0.0f,  1.0f,        // TexCoord 1
+                            0.5f, -0.5f, 0.0f,  // Position 2
+                            1.0f,  1.0f,        // TexCoord 2
+                            0.5f,  0.5f, 0.0f,  // Position 3
+                            1.0f,  0.0f         // TexCoord 3
+                         };
+  for(unsigned i = 0; i < 20; ++i)
+  {
+    vVerts[i]_ = vVertices[i];
+  }
+  GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
+  for(unsigned i = 0; i < 6; ++i)
+  {
+    indices_[i] = indices[i];
+  }
+  // Set the viewport
+  glViewport ( 0, 0, width, height );
+    program = LoadProgram(vShaderStr, fShaderStr);
+  
+  Position_worldspace = glGetUniformLocation(program, "Position");
+  Scale = glGetUniformLocation(program, "Scale");
+  Rotation = glGetUniformLocation(program, "Rotation");
+  View = glGetUniformLocation(program, "View");
+  Projection = glGetUniformLocation(program, "Projection");
+  Position_modelspace = glGetAttribLocation(program, "vertexPosition_modelspace");
+  VertexUV = glGetAttribLocation(program, "vertexUV");
+  Texture = glGetUniformLocation(program, "myTextureSampler");
+  
+  // Use the program object
+  glUseProgram ( userData->programObject );
+  
+    // Load the vertex position
+  glVertexAttribPointer ( Position_modelspace, 3, GL_FLOAT, 
+                          GL_FALSE, 5 * sizeof(GLfloat), vVerts );
+  // Load the texture coordinate
+  glVertexAttribPointer ( VertexUV, 2, GL_FLOAT,
+                          GL_FALSE, 5 * sizeof(GLfloat), &vVerts[3] );
+
+  glEnableVertexAttribArray ( Position_modelspace );
+  glEnableVertexAttribArray ( VertexUV );
+   // Bind the texture
+   glActiveTexture ( GL_TEXTURE0 );
+}
+
+void GraphicsSystem::Draw()
+{
+  for(int i = 0; i < gObjects.length(); ++i)
+  {
+    GLfloat Position[] = {
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f,
+    };
+    Position[3][0] = gObjects[i]->scale[0];
+    Position[3][1] = gObjects[i]->scale[1];
+    Position[3][2] = gObjects[i]->scale[2];
+
+    GLfloat Rotation[] = {
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f,
+    };
+    GLfloat Scale[] = {
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f,
+    };
+
+    Scale[0][0] = gObjects[i]->scale[0];
+    Scale[1][1] = gObjects[i]->scale[1];
+    Scale[2][2] = gObjects[i]->scale[2];
+    
+    Rotation = setUpRotationMatrix(Rotation, gObjects[i]->scale[0], 1, 0, 0);
+    Rotation = setUpRotationMatrix(Rotation, gObjects[i]->scale[1], 0, 1, 0);
+    Rotation = setUpRotationMatrix(Rotation, gObjects[i]->scale[2], 0, 0, 1);
+    
+    glBindTexture ( GL_TEXTURE_2D, gObjects[i]->textureID );
+
+    // Set the sampler texture unit to 0
+    glUniform1i ( Texture, 0 );
+
+    glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices );
+  }
+}
+
+GLuint LoadProgram(const char * vertSrc, const char * fragSrc)
+{
+   GLuint programObject;
+   GLint linked;
+
+   // Load the vertex/fragment shaders
+   vertexShader = esLoadShader ( GL_VERTEX_SHADER, vertSrc );
+   if ( vertexShader == 0 )
+      return 0;
+
+   fragmentShader = esLoadShader ( GL_FRAGMENT_SHADER, fragSrc );
+   if ( fragmentShader == 0 )
+   {
+      glDeleteShader( vertexShader );
+      return 0;
+   }
+
+   // Create the program object
+   programObject = glCreateProgram ( );
+   
+   if ( programObject == 0 )
+      return 0;
+
+   glAttachShader ( programObject, vertexShader );
+   glAttachShader ( programObject, fragmentShader );
+
+   // Link the program
+   glLinkProgram ( programObject );
+
+   // Check the link status
+   glGetProgramiv ( programObject, GL_LINK_STATUS, &linked );
+
+   if ( !linked ) 
+   {
+      GLint infoLen = 0;
+
+      glGetProgramiv ( programObject, GL_INFO_LOG_LENGTH, &infoLen );
+      
+      if ( infoLen > 1 )
+      {
+         char* infoLog = new char[infoLen];
+
+         glGetProgramInfoLog ( programObject, infoLen, NULL, infoLog );
+         esLogMessage ( "Error linking program:\n%s\n", infoLog );            
+         
+         free ( infoLog );
+      }
+
+      glDeleteProgram ( programObject );
+      return 0;
+   }
+
+   // Free up no longer needed shader resources
+   glDeleteShader ( vertexShader );
+   glDeleteShader ( fragmentShader );
+
+   return programObject;
 }
 
 GLboolean GraphicsSystem::CreateWindow()
@@ -105,8 +264,10 @@ EGLBoolean GraphicsSystem::WinCreate()
    }
    
    // You can hardcode the resolution here:
-   display_width = 640;
-   display_height = 480;
+   //display_width = 640;
+   //display_height = 480;
+   width = display_width;
+   height = display_height;
 
    dst_rect.x = 0;
    dst_rect.y = 0;
@@ -251,6 +412,18 @@ GLboolean GraphicsSystem::userInterrupt(ESContext *esContext)
     return userinterrupt;
 }
 #endif
+
+void GraphicsSystem::LoadPngToTexture(const char * filename)
+{
+  GLint myPNG = loadpng(filename);
+  if(myPNG == 0){
+    std::cout<<"PNG did not load"<<std::endl;
+    return;
+  }
+  std::string temp = filename;
+  temp = temp.substr(0, temp.find_last_of('.'));
+  mTextures.insert(temp, myPNG);
+}
 
 
 // This one file (png_texture.cpp) is free and unencumbered software
@@ -406,4 +579,34 @@ GLint GraphicsSystem::loadpng(const char * file_name)
     png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
     fclose(fp);
     return texture;
+}
+
+GLfloat[4][4] setUpRotationMatrix(GLfloat rotationMatrix[4][4], float angle, float u, float v, float w)
+{
+  float L = (u*u + v * v + w * w);
+  angle = angle * 3.14159 / 180.0; //converting to radian value
+  float u2 = u * u;
+  float v2 = v * v;
+  float w2 = w * w;
+
+  rotationMatrix[0][0] = (u2 + (v2 + w2) * cos(angle)) / L;
+  rotationMatrix[1][0] = (u * v * (1 - cos(angle)) - w * sqrt(L) * sin(angle)) / L;
+  rotationMatrix[2][0] = (u * w * (1 - cos(angle)) + v * sqrt(L) * sin(angle)) / L;
+  rotationMatrix[3][0] = 0.0;
+
+  rotationMatrix[0][1] = (u * v * (1 - cos(angle)) + w * sqrt(L) * sin(angle)) / L;
+  rotationMatrix[1][1] = (v2 + (u2 + w2) * cos(angle)) / L;
+  rotationMatrix[2][1] = (v * w * (1 - cos(angle)) - u * sqrt(L) * sin(angle)) / L;
+  rotationMatrix[3][1] = 0.0;
+
+  rotationMatrix[0][2] = (u * w * (1 - cos(angle)) - v * sqrt(L) * sin(angle)) / L;
+  rotationMatrix[1][2] = (v * w * (1 - cos(angle)) + u * sqrt(L) * sin(angle)) / L;
+  rotationMatrix[2][2] = (w2 + (u2 + v2) * cos(angle)) / L;
+  rotationMatrix[3][2] = 0.0;
+
+  rotationMatrix[0][3] = 0.0;
+  rotationMatrix[1][3] = 0.0;
+  rotationMatrix[2][3] = 0.0;
+  rotationMatrix[3][3] = 1.0;
+  return rotationMatrix;
 }

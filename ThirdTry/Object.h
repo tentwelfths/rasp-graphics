@@ -1,3 +1,4 @@
+#pragma once
 class Object
 {
   public:
@@ -6,3 +7,5 @@ class Object
     float rotation[3];
     unsigned int textureID;
 };
+
+extern std::vector<Object*> gObjects;

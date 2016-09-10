@@ -20,19 +20,21 @@ public:
   void KeyPress();
   void Update(float dt);
   
-  void LoadVertShader(const char * shaderSrc);
-  void LoadFragShader(const char * shaderSrc);
+  void LoadProgram(const char * vertSrc,const char * fragSrc);
   
   void LoadPngToTexture(const char * filename);
   
-  GLuint vertShader;
-  GLuint fragShader;
+  GLuint vertexShader;
+  GLuint fragmentShader;
+  GLuint program;
 
   GLint       width;
 
   /// Window height
   GLint       height;
 
+  GLuint View,Projection,Position_modelspace,Position_worldspace,Scale,Rotation,Texture;
+  
   /// Window handle
   EGLNativeWindowType  hWnd;
 
@@ -46,6 +48,10 @@ public:
   EGLSurface  eglSurface;
   
   std::vector<Texture> mTextures;
+  
+  GLfloat vVerts_[20];
+  
+  GLushort indices_[6];
 private:
   GLint loadpng(const char * filename);
   GLboolean WinCreate();
