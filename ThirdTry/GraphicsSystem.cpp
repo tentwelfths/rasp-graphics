@@ -196,6 +196,7 @@ GLuint LoadProgram(const char * vertSrc, const char * fragSrc)
 
 GLboolean GraphicsSystem::CreateWindow()
 {
+  GLuint flags  = ES_WINDOW_RGB;
   EGLint attribList[] =
    {
        EGL_RED_SIZE,       5,
