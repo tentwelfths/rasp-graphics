@@ -196,7 +196,7 @@ GraphicsSystem::GraphicsSystem()
   //View = glGetUniformLocation(program, "View");
   //Projection = glGetUniformLocation(program, "Projection");
   Position_modelspace = glGetAttribLocation(program, "vertexPosition_modelspace");
-  VertexUV = glGetAttribLocation(program, "UV");
+  VertexUV = glGetAttribLocation(program, "vertexUV");
   Texture = glGetUniformLocation(program, "myTextureSampler");
   if(Texture < 0){
     std::cout<<"FUUUUUUUUUUUTexture"<<std::endl;
