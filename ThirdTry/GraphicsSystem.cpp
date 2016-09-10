@@ -156,7 +156,7 @@ GraphicsSystem::GraphicsSystem()
     "uniform sampler2D myTextureSampler;                        \n"
     "void main()                                         \n"
     "{                                                   \n"
-    "  gl_FragColor = vec4(0.0, v_texCoord.x, v_texCoord.y, 1.0);\n"
+    "  gl_FragColor = texture2D( myTextureSampler, v_texCoord );\n"
     "}                                                   \n";
   
 
@@ -565,6 +565,7 @@ void GraphicsSystem::LoadPngToTexture(const char * filename)
   TextureType t;
   t.name = temp;
   t.textureID = myPNG;
+  
   mTextures.insert({temp, t});
 }
 
