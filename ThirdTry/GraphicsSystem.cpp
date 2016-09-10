@@ -1,6 +1,6 @@
 #include "GraphicsSystem.h"
 
-GLfloat[4][4] setUpRotationMatrix(GLfloat rotationMatrix[4][4], float angle, float u, float v, float w);
+GLfloat[][4] setUpRotationMatrix(GLfloat rotationMatrix[][4], float angle, float u, float v, float w);
 
 GraphicsSystem::GraphicsSystem()
 {
@@ -55,7 +55,7 @@ GraphicsSystem::GraphicsSystem()
                          };
   for(unsigned i = 0; i < 20; ++i)
   {
-    vVerts[i]_ = vVertices[i];
+    vVerts_[i] = vVertices[i];
   }
   GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
   for(unsigned i = 0; i < 6; ++i)
@@ -76,7 +76,7 @@ GraphicsSystem::GraphicsSystem()
   Texture = glGetUniformLocation(program, "myTextureSampler");
   
   // Use the program object
-  glUseProgram ( userData->programObject );
+  glUseProgram ( program );
   
     // Load the vertex position
   glVertexAttribPointer ( Position_modelspace, 3, GL_FLOAT, 
@@ -584,7 +584,7 @@ GLint GraphicsSystem::loadpng(const char * file_name)
     return texture;
 }
 
-GLfloat[4][4] setUpRotationMatrix(GLfloat rotationMatrix[4][4], float angle, float u, float v, float w)
+GLfloat[][4] setUpRotationMatrix(GLfloat rotationMatrix[][4], float angle, float u, float v, float w)
 {
   float L = (u*u + v * v + w * w);
   angle = angle * 3.14159 / 180.0; //converting to radian value
