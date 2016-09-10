@@ -259,7 +259,7 @@ void GraphicsSystem::Draw()
     // Set the sampler texture unit to 0
     glUniform1i ( Texture, 0 );
 
-    glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices_ );
+    //glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices_ );
   }
   eglSwapBuffers(eglDisplay, eglSurface);
 }
