@@ -196,7 +196,7 @@ GraphicsSystem::GraphicsSystem()
   View = glGetUniformLocation(program, "View");
   Projection = glGetUniformLocation(program, "Projection");
   Position_modelspace = glGetAttribLocation(program, "vertexPosition_modelspace");
-  VertexUV = glGetAttribLocation(program, "vertexUV");
+  VertexUV = glGetAttribLocation(program, "UV");
   Texture = glGetUniformLocation(program, "myTextureSampler");
   
   // Use the program object
