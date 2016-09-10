@@ -4,8 +4,26 @@
 
 #include <GLES/gl.h>
 #include <EGL/egl.h>
+#include <GLES2/gl2.h>
 #include <EGL/eglext.h>
 #include <png.h>
+#include <math.h>
+#include <string.h>
+#include <stdarg.h>
+#include <sys/time.h>
+
+#ifdef RPI_NO_X
+#include  "bcm_host.h"
+#else
+#include  <X11/Xlib.h>
+#include  <X11/Xatom.h>
+#include  <X11/Xutil.h>
+#endif
+
+#ifndef RPI_NO_X
+// X11 related local variables
+static Display *x_display = NULL;
+#endif
 
 struct TextureType{
   std::string name;
@@ -56,4 +74,5 @@ public:
 private:
   GLint loadpng(const char * filename);
   GLboolean WinCreate();
+  GLboolean userInterrupt();
 };
