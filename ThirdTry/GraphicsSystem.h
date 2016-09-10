@@ -73,6 +73,6 @@ public:
   GLushort indices_[6];
 private:
   GLint loadpng(const char * filename);
-  GLboolean WinCreate();
+  EGLboolean WinCreate();
   GLboolean userInterrupt();
 };
