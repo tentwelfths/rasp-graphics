@@ -211,8 +211,7 @@ GraphicsSystem::GraphicsSystem()
 
   glEnableVertexAttribArray ( Position_modelspace );
   glEnableVertexAttribArray ( VertexUV );
-   // Bind the texture
-   glActiveTexture ( GL_TEXTURE0 );
+
 }
 
 void GraphicsSystem::Draw()
@@ -251,15 +250,19 @@ void GraphicsSystem::Draw()
     Scale[10] = gObjects[i]->scale[2];
     
     setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[0], 1, 0, 0);
-    //setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[1], 0, 1, 0);
-    //setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[2], 0, 0, 1);
+    setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[1], 0, 1, 0);
+    setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[2], 0, 0, 1);
 
+       // Bind the texture
+   glActiveTexture ( GL_TEXTURE0 );
     glBindTexture ( GL_TEXTURE_2D, gObjects[i]->textureID );
+       // Bind the texture
+   glActiveTexture ( GL_TEXTURE0 );
 
     // Set the sampler texture unit to 0
     glUniform1i ( Texture, 0 );
 
-    //glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices_ );
+    glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices_ );
   }
   eglSwapBuffers(eglDisplay, eglSurface);
 }
