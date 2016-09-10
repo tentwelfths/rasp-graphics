@@ -255,6 +255,7 @@ void GraphicsSystem::Draw()
 
     glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices_ );
   }
+  eglSwapBuffers(eglDisplay, eglSurface);
 }
 
 GLuint GraphicsSystem::LoadProgram(const char * vertSrc, const char * fragSrc)
