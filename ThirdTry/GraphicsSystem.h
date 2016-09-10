@@ -1,12 +1,13 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <iostream>
 
 #include <GLES/gl.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include <png.h>
 
-struct Texture{
+struct TextureType{
   std::string name;
   GLuint textureID;
 };
@@ -47,7 +48,7 @@ public:
   /// EGL surface
   EGLSurface  eglSurface;
   
-  std::vector<Texture> mTextures;
+  std::vector<TextureType> mTextures;
   
   GLfloat vVerts_[20];
   

@@ -422,7 +422,10 @@ void GraphicsSystem::LoadPngToTexture(const char * filename)
   }
   std::string temp = filename;
   temp = temp.substr(0, temp.find_last_of('.'));
-  mTextures.insert(temp, myPNG);
+  TextureType t;
+  t.name = temp;
+  t.textureID = myPNG;
+  mTextures.push_back(t);
 }
 
 
