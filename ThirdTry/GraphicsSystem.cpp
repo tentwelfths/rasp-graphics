@@ -316,7 +316,7 @@ GLboolean GraphicsSystem::userInterrupt()
 //
 //      This function initialized the native X11 display and window for EGL
 //
-EGLBoolean GraphicsSystem::GraphicsSystem::WinCreate()
+GLBoolean GraphicsSystem::GraphicsSystem::WinCreate()
 {
     Window root;
     XSetWindowAttributes swa;
@@ -335,7 +335,7 @@ EGLBoolean GraphicsSystem::GraphicsSystem::WinCreate()
     x_display = XOpenDisplay(NULL);
     if ( x_display == NULL )
     {
-        return EGL_FALSE;
+        return GL_FALSE;
     }
 
     root = DefaultRootWindow(x_display);
@@ -377,7 +377,7 @@ EGLBoolean GraphicsSystem::GraphicsSystem::WinCreate()
        &xev );
 
     hWnd = (EGLNativeWindowType) win;
-    return EGL_TRUE;
+    return GL_TRUE;
 }
 
 
