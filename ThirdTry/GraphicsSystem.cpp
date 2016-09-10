@@ -3,6 +3,127 @@
 
 void setUpRotationMatrix(GLfloat ** rotationMatrix, float angle, float u, float v, float w);
 
+bool CreateEGLContext ( EGLNativeWindowType hWnd, EGLDisplay* eglDisplay,
+                              EGLContext* eglContext, EGLSurface* eglSurface,
+                              EGLint attribList[])
+{
+   EGLint numConfigs;
+   EGLint majorVersion;
+   EGLint minorVersion;
+   EGLDisplay display;
+   EGLContext context;
+   EGLSurface surface;
+   EGLConfig config;
+   #ifndef RPI_NO_X
+   EGLint contextAttribs[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE, EGL_NONE };
+   #else
+   EGLint contextAttribs[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
+   #endif
+   
+   
+   // Get Display
+   #ifndef RPI_NO_X
+   display = eglGetDisplay((EGLNativeDisplayType)x_display);
+   if ( display == EGL_NO_DISPLAY )
+   {
+      return false;
+   }
+   #else
+   display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+   if ( display == EGL_NO_DISPLAY )
+   {
+      return false;
+   }
+   #endif
+
+   // Initialize EGL
+   if ( !eglInitialize(display, &majorVersion, &minorVersion) )
+   {
+      return false;
+   }
+
+   // Get configs
+   if ( !eglGetConfigs(display, NULL, 0, &numConfigs) )
+   {
+      return false;
+   }
+
+   // Choose config
+   if ( !eglChooseConfig(display, attribList, &config, 1, &numConfigs) )
+   {
+      return false;
+   }
+
+   // Create a surface
+   surface = eglCreateWindowSurface(display, config, (EGLNativeWindowType)hWnd, NULL);
+   if ( surface == EGL_NO_SURFACE )
+   {
+      return false;
+   }
+
+   // Create a GL context
+   context = eglCreateContext(display, config, EGL_NO_CONTEXT, contextAttribs );
+   if ( context == EGL_NO_CONTEXT )
+   {
+      return false;
+   }   
+   
+   // Make the context current
+   if ( !eglMakeCurrent(display, surface, surface, context) )
+   {
+      return false;
+   }
+   
+   *eglDisplay = display;
+   *eglSurface = surface;
+   *eglContext = context;
+   return true;
+} 
+
+GLuint ESUTIL_API esLoadShader ( GLenum type, const char *shaderSrc )
+{
+   GLuint shader;
+   GLint compiled;
+   
+   // Create the shader object
+   shader = glCreateShader ( type );
+
+   if ( shader == 0 )
+   	return 0;
+
+   // Load the shader source
+   glShaderSource ( shader, 1, &shaderSrc, NULL );
+   
+   // Compile the shader
+   glCompileShader ( shader );
+
+   // Check the compile status
+   glGetShaderiv ( shader, GL_COMPILE_STATUS, &compiled );
+
+   if ( !compiled ) 
+   {
+      GLint infoLen = 0;
+
+      glGetShaderiv ( shader, GL_INFO_LOG_LENGTH, &infoLen );
+      
+      if ( infoLen > 1 )
+      {
+         char* infoLog = new char[infoLen];
+
+         glGetShaderInfoLog ( shader, infoLen, NULL, infoLog );
+         esLogMessage ( "Error compiling shader:\n%s\n", infoLog );            
+         
+         free ( infoLog );
+      }
+
+      glDeleteShader ( shader );
+      return 0;
+   }
+
+   return shader;
+
+}
+
 GraphicsSystem::GraphicsSystem()
 {
 #ifdef RPI_NO_X
