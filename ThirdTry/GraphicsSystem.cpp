@@ -198,6 +198,15 @@ GraphicsSystem::GraphicsSystem()
   Position_modelspace = glGetAttribLocation(program, "vertexPosition_modelspace");
   VertexUV = glGetAttribLocation(program, "UV");
   Texture = glGetUniformLocation(program, "myTextureSampler");
+  if(Texture < 0){
+    std::cout<<"FUUUUUUUUUUUTexture"<<std::endl;
+  }
+  if(VertexUV < 0){
+    std::cout<<"FUUUUUUUUUUUVertexUV"<<std::endl;
+  }
+  if(Position_modelspace < 0){
+    std::cout<<"FUUUUUUUUUUUPosition_modelspace"<<std::endl;
+  }
   
   // Use the program object
   glUseProgram ( program );
