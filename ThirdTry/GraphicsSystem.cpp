@@ -190,11 +190,11 @@ GraphicsSystem::GraphicsSystem()
   glViewport ( 0, 0, width, height );
     program = LoadProgram(vShaderStr, fShaderStr);
   
-  Position_worldspace = glGetUniformLocation(program, "Position");
-  Scale_ = glGetUniformLocation(program, "Scale");
-  Rotation_ = glGetUniformLocation(program, "Rotation");
-  View = glGetUniformLocation(program, "View");
-  Projection = glGetUniformLocation(program, "Projection");
+  //Position_worldspace = glGetUniformLocation(program, "Position");
+  //Scale_ = glGetUniformLocation(program, "Scale");
+  //Rotation_ = glGetUniformLocation(program, "Rotation");
+  //View = glGetUniformLocation(program, "View");
+  //Projection = glGetUniformLocation(program, "Projection");
   Position_modelspace = glGetAttribLocation(program, "vertexPosition_modelspace");
   VertexUV = glGetAttribLocation(program, "UV");
   Texture = glGetUniformLocation(program, "myTextureSampler");
