@@ -208,18 +208,7 @@ GraphicsSystem::GraphicsSystem()
     std::cout<<"FUUUUUUUUUUUPosition_modelspace"<<std::endl;
   }
   
-  // Use the program object
-  glUseProgram ( program );
-  
-    // Load the vertex position
-  glVertexAttribPointer ( Position_modelspace, 3, GL_FLOAT, 
-                          GL_FALSE, 5 * sizeof(GLfloat), vVerts_ );
-  // Load the texture coordinate
-  glVertexAttribPointer ( VertexUV, 2, GL_FLOAT,
-                          GL_FALSE, 5 * sizeof(GLfloat), &vVerts_[3] );
 
-  glEnableVertexAttribArray ( Position_modelspace );
-  glEnableVertexAttribArray ( VertexUV );
 
 }
 
@@ -262,6 +251,19 @@ void GraphicsSystem::Draw()
     setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[1], 0, 1, 0);
     setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[2], 0, 0, 1);
 
+      // Use the program object
+  glUseProgram ( program );
+  
+    // Load the vertex position
+  glVertexAttribPointer ( Position_modelspace, 3, GL_FLOAT, 
+                          GL_FALSE, 5 * sizeof(GLfloat), vVerts_ );
+  // Load the texture coordinate
+  glVertexAttribPointer ( VertexUV, 2, GL_FLOAT,
+                          GL_FALSE, 5 * sizeof(GLfloat), &vVerts_[3] );
+
+  glEnableVertexAttribArray ( Position_modelspace );
+  glEnableVertexAttribArray ( VertexUV );
+    
        // Bind the texture
    glActiveTexture ( GL_TEXTURE0 );
     glBindTexture ( GL_TEXTURE_2D, gObjects[i]->textureID );
