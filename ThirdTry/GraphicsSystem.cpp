@@ -316,7 +316,7 @@ GLboolean GraphicsSystem::userInterrupt()
 //
 //      This function initialized the native X11 display and window for EGL
 //
-EGLBoolean GraphicsSystem::WinCreate()
+EGLBoolean GraphicsSystem::GraphicsSystem::WinCreate()
 {
     Window root;
     XSetWindowAttributes swa;
