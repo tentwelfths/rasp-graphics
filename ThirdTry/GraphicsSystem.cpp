@@ -131,7 +131,7 @@ GraphicsSystem::GraphicsSystem()
 #endif
   int32_t success = 0;
   
-  //CreateWindow();
+  CreateWindow();
   
   char  vShaderStr[] =  
     "attribute vec3 vertexPosition_modelspace;       \n"
