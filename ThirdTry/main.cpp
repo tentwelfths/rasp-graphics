@@ -12,6 +12,7 @@ int main ( int argc, char *argv[] )
   a.scale[0] = 1;
   a.scale[1] = 1;
   a.textureID = g.mTextures["Kakka_Carrot_Veggie"].textureID;
+  a.inUse = true;
   gObjects[a.textureID][0] = a;
   
   while(true){
