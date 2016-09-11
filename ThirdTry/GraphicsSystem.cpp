@@ -248,34 +248,38 @@ void GraphicsSystem::Draw()
   glUniformMatrix4fv(View_, 1, GL_FALSE, &View[0][0]);
   glUniformMatrix4fv(Projection_, 1, GL_FALSE, &Projection[0][0]);
    
-  for(int i = 0; i < gObjects.size(); ++i)
+  for(int i = 0; i < 50; ++i)
   {
-    glm::mat4 Position,Scale, Rotation;
-    
-    Position[3][0] = gObjects[i]->position[0];
-    Position[3][1] = gObjects[i]->position[1];
-    Position[3][2] = gObjects[i]->position[2];
-
-    Scale[0][0] = gObjects[i]->scale[0];
-    Scale[1][1] = gObjects[i]->scale[1];
-    Scale[2][2] = gObjects[i]->scale[2];
-    //Scale[1][1] = x * 1.5;
-    Rotation = setUpRotationMatrix(Rotation, gObjects[i]->rotation[0], 1, 0, 0);
-    Rotation = setUpRotationMatrix(Rotation, gObjects[i]->rotation[1], 0, 1, 0);
-    Rotation = setUpRotationMatrix(Rotation, gObjects[i]->rotation[2], 0, 0, 1);
-    
-    glUniformMatrix4fv(Position_worldspace, 1, GL_FALSE, &Position[0][0]);
-    glUniformMatrix4fv(Scale_, 1, GL_FALSE, &Scale[0][0]);
-    glUniformMatrix4fv(Rotation_, 1, GL_FALSE, &Rotation[0][0]);
-    
-    glBindTexture ( GL_TEXTURE_2D, gObjects[i]->textureID );
+    if(gObjects[i][0].isUse == false)continue;
+    glBindTexture ( GL_TEXTURE_2D, i );
        // Bind the texture
     glActiveTexture ( GL_TEXTURE0 );
 
     // Set the sampler texture unit to 0
     glUniform1i ( Texture, 0 );
+    for(int j = 0; j < 50; ++i)
+    {
+      if(gObjects[i][j].isUse == false)break;
+      glm::mat4 Position,Scale, Rotation;
+      
+      Position[3][0] = gObjects[i][j].position[0];
+      Position[3][1] = gObjects[i][j].position[1];
+      Position[3][2] = gObjects[i][j].position[2];
 
-    glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices_ );
+      Scale[0][0] = gObjects[i][j].scale[0];
+      Scale[1][1] = gObjects[i][j].scale[1];
+      Scale[2][2] = gObjects[i][j].scale[2];
+      //Scale[1][1] = x * 1.5;
+      Rotation = setUpRotationMatrix(Rotation, gObjects[i][j].rotation[0], 1, 0, 0);
+      Rotation = setUpRotationMatrix(Rotation, gObjects[i][j].rotation[1], 0, 1, 0);
+      Rotation = setUpRotationMatrix(Rotation, gObjects[i][j].rotation[2], 0, 0, 1);
+      
+      glUniformMatrix4fv(Position_worldspace, 1, GL_FALSE, &Position[0][0]);
+      glUniformMatrix4fv(Scale_, 1, GL_FALSE, &Scale[0][0]);
+      glUniformMatrix4fv(Rotation_, 1, GL_FALSE, &Rotation[0][0]);
+
+      glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices_ );
+    }
     std::cout<<"err: "<<glGetError()<<std::endl;
   }
   eglSwapBuffers(eglDisplay, eglSurface);

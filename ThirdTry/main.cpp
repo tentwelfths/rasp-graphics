@@ -1,18 +1,18 @@
 #include "GraphicsSystem.h"
 #include "Object.h"
-std::vector<Object*> gObjects;
+Object gObjects[50][50];
 int main ( int argc, char *argv[] )
 {
   
   GraphicsSystem g;
   g.LoadPngToTexture("Kakka_Carrot_Veggie.png");
-  Object * a = new Object();
-  a->position[0] = 0;
-  a->position[1] = 0;
-  a->scale[0] = 1;
-  a->scale[1] = 1;
-  a->textureID = g.mTextures["Kakka_Carrot_Veggie"].textureID;
-  gObjects.push_back(a);
+  Object a;
+  a.position[0] = 0;
+  a.position[1] = 0;
+  a.scale[0] = 1;
+  a.scale[1] = 1;
+  a.textureID = g.mTextures["Kakka_Carrot_Veggie"].textureID;
+  gObjects[a.textureID][0] = a;
   
   while(true){
     g.Draw();
