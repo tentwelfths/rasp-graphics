@@ -14,7 +14,7 @@ CFLAGS+=-DRPI_NO_X
 
 
 
-MYSRC=./main.cpp GraphicsSystem.cpp
+MYSRC=./main.cpp GraphicsSystem.cpp NetworkingSystem.cpp
 
 default: all
 
