@@ -1,3 +1,5 @@
+#define GLM_FORCE_RADIANS
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
