@@ -5,6 +5,7 @@ int main ( int argc, char *argv[] )
 {
   
   GraphicsSystem g;
+  NetworkingSystem n(27015, "192.168.77.106");
   g.LoadPngToTexture("Kakka_Carrot_Veggie.png");
   Object a;
   a.position[0] = 0;
