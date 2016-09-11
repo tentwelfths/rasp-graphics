@@ -17,5 +17,5 @@ public:
   struct hostent *server;
   char buffer[256];
   int Send(const char * buffer, int len);
-  void Receive(const char * buffer, int len);
+  void Receive(char * buffer, int len);
 };
