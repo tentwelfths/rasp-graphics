@@ -137,11 +137,11 @@ GraphicsSystem::GraphicsSystem()
     "attribute vec3 vertexPosition_modelspace;       \n"
     "attribute vec2 vertexUV;       \n"
     "varying vec2 v_texCoord;         \n"
-    "uniform mat4 Position;\n"
-    "uniform mat4 Scale;\n"
-    "uniform mat4 Rotation;\n"
-    "uniform mat4 View;\n"
-    "uniform mat4 Projection;\n"
+    "attribute mat4 Position;\n"
+    "attribute mat4 Scale;\n"
+    "attribute mat4 Rotation;\n"
+    "attribute mat4 View;\n"
+    "attribute mat4 Projection;\n"
     "\n"
     "void main(){\n"
     //"  mat4 MVP = Projection * View * Position * Rotation * Scale;\n"
@@ -190,11 +190,11 @@ GraphicsSystem::GraphicsSystem()
   glViewport ( 0, 0, width, height );
     program = LoadProgram(vShaderStr, fShaderStr);
   
-  //Position_worldspace = glGetUniformLocation(program, "Position");
-  //Scale_ = glGetUniformLocation(program, "Scale");
-  //Rotation_ = glGetUniformLocation(program, "Rotation");
-  //View = glGetUniformLocation(program, "View");
-  //Projection = glGetUniformLocation(program, "Projection");
+  Position_worldspace = glGetAttribLocation(program, "Position");
+  Scale_ = glGetAttribLocation(program, "Scale");
+  Rotation_ = glGetAttribLocation(program, "Rotation");
+  View = glGetAttribLocation(program, "View");
+  Projection = glGetAttribLocation(program, "Projection");
   Position_modelspace = glGetAttribLocation(program, "vertexPosition_modelspace");
   VertexUV = glGetAttribLocation(program, "vertexUV");
   Texture = glGetUniformLocation(program, "myTextureSampler");
@@ -265,16 +265,30 @@ void GraphicsSystem::Draw()
     setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[1], 0, 1, 0);
     setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[2], 0, 0, 1);
 
-  
+    glVertexAttribPointer(Position_worldspace,4,GL_FLOAT, false,0, &Position[0]);
+    glVertexAttribPointer(Position_worldspace+1,4,GL_FLOAT, false,0, &Position[4]);
+    glVertexAttribPointer(Position_worldspace+2,4,GL_FLOAT, false,0, &Position[8]);
+    glVertexAttribPointer(Position_worldspace+3,4,GL_FLOAT, false,0, &Position[12]);
+    
+    glVertexAttribPointer(Rotation_,4,GL_FLOAT, false,0, &Rotation[0]);
+    glVertexAttribPointer(Rotation_+1,4,GL_FLOAT, false,0, &Rotation[4]);
+    glVertexAttribPointer(Rotation_+2,4,GL_FLOAT, false,0, &Rotation[8]);
+    glVertexAttribPointer(Rotation_+3,4,GL_FLOAT, false,0, &Rotation[12]);
+    
+    glVertexAttribPointer(Scale_,4,GL_FLOAT, false,0, &Scale[0]);
+    glVertexAttribPointer(Scale_+1,4,GL_FLOAT, false,0, &Scale[4]);
+    glVertexAttribPointer(Scale_+2,4,GL_FLOAT, false,0, &Scale[8]);
+    glVertexAttribPointer(Scale_+3,4,GL_FLOAT, false,0, &Scale[12]);
+    
     glBindTexture ( GL_TEXTURE_2D, gObjects[i]->textureID );
        // Bind the texture
-   glActiveTexture ( GL_TEXTURE0 );
+    glActiveTexture ( GL_TEXTURE0 );
 
     // Set the sampler texture unit to 0
     glUniform1i ( Texture, 0 );
 
     glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices_ );
-    std::cout<<"err: "<<glGetError()<<std::endl;
+    //std::cout<<"err: "<<glGetError()<<std::endl;
   }
   eglSwapBuffers(eglDisplay, eglSurface);
 }

@@ -12,6 +12,11 @@
 #include <stdarg.h>
 #include <sys/time.h>
 
+// Include GLM
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+using namespace glm;
+
 #include <vector>
 #include <unordered_map>
 
@@ -54,6 +59,10 @@ static Display *x_display = NULL;
 struct TextureType{
   std::string name;
   GLuint textureID;
+};
+
+struct Camera{
+  float posx,posy,fov,look
 };
 
 class GraphicsSystem
