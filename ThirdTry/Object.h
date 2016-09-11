@@ -10,4 +10,4 @@ class Object
   bool inUse;
 };
 
-extern std::vector<Object*> gObjects;
+extern Object gObjects[50][50];

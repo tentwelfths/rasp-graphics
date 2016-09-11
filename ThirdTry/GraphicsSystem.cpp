@@ -250,7 +250,7 @@ void GraphicsSystem::Draw()
    
   for(int i = 0; i < 50; ++i)
   {
-    if(gObjects[i][0].isUse == false)continue;
+    if(gObjects[i][0].inUse == false)continue;
     glBindTexture ( GL_TEXTURE_2D, i );
        // Bind the texture
     glActiveTexture ( GL_TEXTURE0 );
@@ -259,7 +259,7 @@ void GraphicsSystem::Draw()
     glUniform1i ( Texture, 0 );
     for(int j = 0; j < 50; ++i)
     {
-      if(gObjects[i][j].isUse == false)break;
+      if(gObjects[i][j].inUse == false)break;
       glm::mat4 Position,Scale, Rotation;
       
       Position[3][0] = gObjects[i][j].position[0];
