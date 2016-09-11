@@ -1,4 +1,5 @@
 #include "GraphicsSystem.h"
+#include "NetworkingSystem.h"
 #include "Object.h"
 Object gObjects[50][50];
 int main ( int argc, char *argv[] )
