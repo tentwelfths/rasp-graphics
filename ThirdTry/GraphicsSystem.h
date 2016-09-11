@@ -62,7 +62,7 @@ struct TextureType{
 };
 
 struct Camera{
-  float posx,posy,fov,look
+  float posx,posy,fov;
 };
 
 class GraphicsSystem
