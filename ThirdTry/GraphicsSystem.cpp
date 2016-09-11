@@ -1,7 +1,7 @@
 #include "GraphicsSystem.h"
 #include "Object.h"
 
-void setUpRotationMatrix(GLfloat ** rotationMatrix, float angle, float u, float v, float w);
+glm::mat4 setUpRotationMatrix(glm::mat4 rotationMatrix, float angle, float u, float v, float w)
 
 bool CreateEGLContext ( EGLNativeWindowType hWnd, EGLDisplay* eglDisplay,
                               EGLContext* eglContext, EGLSurface* eglSurface,
@@ -137,11 +137,11 @@ GraphicsSystem::GraphicsSystem()
     "attribute vec3 vertexPosition_modelspace;       \n"
     "attribute vec2 vertexUV;       \n"
     "varying vec2 v_texCoord;         \n"
-    "attribute mat4 Position;\n"
-    "attribute mat4 Scale;\n"
-    "attribute mat4 Rotation;\n"
-    "attribute mat4 View;\n"
-    "attribute mat4 Projection;\n"
+    "uniform mat4 Position;\n"
+    "uniform mat4 Scale;\n"
+    "uniform mat4 Rotation;\n"
+    "uniform mat4 View;\n"
+    "uniform mat4 Projection;\n"
     "\n"
     "void main(){\n"
     //"  mat4 MVP = Projection * View * Position * Rotation * Scale;\n"
@@ -190,11 +190,11 @@ GraphicsSystem::GraphicsSystem()
   glViewport ( 0, 0, width, height );
     program = LoadProgram(vShaderStr, fShaderStr);
   
-  Position_worldspace = glGetAttribLocation(program, "Position");
-  Scale_ = glGetAttribLocation(program, "Scale");
-  Rotation_ = glGetAttribLocation(program, "Rotation");
-  View = glGetAttribLocation(program, "View");
-  Projection = glGetAttribLocation(program, "Projection");
+  Position_worldspace = glGetUniformLocation(program, "Position");
+  Scale_ = glGetUniformLocation(program, "Scale");
+  Rotation_ = glGetUniformLocation(program, "Rotation");
+  View_ = glGetUniformLocation(program, "View");
+  Projection_ = glGetUniformLocation(program, "Projection");
   Position_modelspace = glGetAttribLocation(program, "vertexPosition_modelspace");
   VertexUV = glGetAttribLocation(program, "vertexUV");
   Texture = glGetUniformLocation(program, "myTextureSampler");
@@ -231,54 +231,42 @@ void GraphicsSystem::Draw()
   
   // Clear the color buffer
   glClear ( GL_COLOR_BUFFER_BIT );
+  
+  // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+  glm::mat4 Projection = glm::perspective(fov, 4.0f / 3.0f, 0.1f, 100.0f);
+  //glm::mat4 Projection = glm::ortho(-4, 4, 4, -4);
+  // Or, for an ortho camera :
+  //glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
+
+  // Camera matrix
+  glm::mat4 View = glm::lookAt(
+    glm::vec3(0, 0, 10), // Camera is at (4,3,3), in World Space
+    glm::vec3(0, 0, 0), // and looks at the origin
+    glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+    );
+
+  glUniformMatrix4fv(View_, 1, GL_FALSE, &View[0][0]);
+  glUniformMatrix4fv(Projection_, 1, GL_FALSE, &Projection[0][0]);
    
   for(int i = 0; i < gObjects.size(); ++i)
   {
-    GLfloat Position[] = {
-        1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f,
-    };
-    Position[3] = gObjects[i]->scale[0];
-    Position[7] = gObjects[i]->scale[1];
-    Position[11] = gObjects[i]->scale[2];
-
-    GLfloat Rotation[] = {
-        1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f,
-    };
-    GLfloat Scale[] = {
-        1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f,
-    };
-
-    Scale[0] = gObjects[i]->scale[0];
-    Scale[5] = gObjects[i]->scale[1];
-    Scale[10] = gObjects[i]->scale[2];
+    glm::mat4 Position,Scale, Rotation;
     
-    setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[0], 1, 0, 0);
-    setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[1], 0, 1, 0);
-    setUpRotationMatrix(reinterpret_cast<GLfloat**>(&Rotation), gObjects[i]->rotation[2], 0, 0, 1);
+    Position[3][0] = gObjects[i]->position[0];
+    Position[3][1] = gObjects[i]->position[1];
+    Position[3][2] = gObjects[i]->position[2];
 
-    glVertexAttribPointer(Position_worldspace,4,GL_FLOAT, false,0, &Position[0]);
-    glVertexAttribPointer(Position_worldspace+1,4,GL_FLOAT, false,0, &Position[4]);
-    glVertexAttribPointer(Position_worldspace+2,4,GL_FLOAT, false,0, &Position[8]);
-    glVertexAttribPointer(Position_worldspace+3,4,GL_FLOAT, false,0, &Position[12]);
+    Scale[0][0] = gObjects[i]->scale[0];
+    Scale[1][1] = gObjects[i]->scale[1];
+    Scale[2][2] = gObjects[i]->scale[2];
+    //Scale[1][1] = x * 1.5;
+    Rotation = setUpRotationMatrix(Rotation, gObjects[i]->rotation[0], 1, 0, 0);
+    Rotation = setUpRotationMatrix(Rotation, gObjects[i]->rotation[1], 0, 1, 0);
+    Rotation = setUpRotationMatrix(Rotation, gObjects[i]->rotation[2], 0, 0, 1);
     
-    glVertexAttribPointer(Rotation_,4,GL_FLOAT, false,0, &Rotation[0]);
-    glVertexAttribPointer(Rotation_+1,4,GL_FLOAT, false,0, &Rotation[4]);
-    glVertexAttribPointer(Rotation_+2,4,GL_FLOAT, false,0, &Rotation[8]);
-    glVertexAttribPointer(Rotation_+3,4,GL_FLOAT, false,0, &Rotation[12]);
-    
-    glVertexAttribPointer(Scale_,4,GL_FLOAT, false,0, &Scale[0]);
-    glVertexAttribPointer(Scale_+1,4,GL_FLOAT, false,0, &Scale[4]);
-    glVertexAttribPointer(Scale_+2,4,GL_FLOAT, false,0, &Scale[8]);
-    glVertexAttribPointer(Scale_+3,4,GL_FLOAT, false,0, &Scale[12]);
+    glUniformMatrix4fv(Position_worldspace, 1, GL_FALSE, &Position[0][0]);
+    glUniformMatrix4fv(Scale_, 1, GL_FALSE, &Scale[0][0]);
+    glUniformMatrix4fv(Rotation_, 1, GL_FALSE, &Rotation[0][0]);
     
     glBindTexture ( GL_TEXTURE_2D, gObjects[i]->textureID );
        // Bind the texture
@@ -739,7 +727,7 @@ GLint GraphicsSystem::loadpng(const char * file_name)
   return texture;
 }
 
-void setUpRotationMatrix(GLfloat ** rotationMatrix, float angle, float u, float v, float w)
+glm::mat4 setUpRotationMatrix(glm::mat4 rotationMatrix, float angle, float u, float v, float w)
 {
   float L = (u*u + v * v + w * w);
   angle = angle * 3.14159 / 180.0; //converting to radian value
@@ -747,24 +735,24 @@ void setUpRotationMatrix(GLfloat ** rotationMatrix, float angle, float u, float 
   float v2 = v * v;
   float w2 = w * w;
 
-/*  (*rotationMatrix)[0] = (u2 + (v2 + w2) * cos(angle)) / L;
-  (*rotationMatrix)[4] = (u * v * (1 - cos(angle)) - w * sqrt(L) * sin(angle)) / L;
-  (*rotationMatrix)[8] = (u * w * (1 - cos(angle)) + v * sqrt(L) * sin(angle)) / L;
-  (*rotationMatrix)[12] = 0.0;
+  rotationMatrix[0][0] = (u2 + (v2 + w2) * cos(angle)) / L;
+  rotationMatrix[1][0] = (u * v * (1 - cos(angle)) - w * sqrt(L) * sin(angle)) / L;
+  rotationMatrix[2][0] = (u * w * (1 - cos(angle)) + v * sqrt(L) * sin(angle)) / L;
+  rotationMatrix[3][0] = 0.0;
 
-  (*rotationMatrix)[1] = (u * v * (1 - cos(angle)) + w * sqrt(L) * sin(angle)) / L;
-  (*rotationMatrix)[5] = (v2 + (u2 + w2) * cos(angle)) / L;
-  (*rotationMatrix)[9] = (v * w * (1 - cos(angle)) - u * sqrt(L) * sin(angle)) / L;
-  (*rotationMatrix)[13] = 0.0;
+  rotationMatrix[0][1] = (u * v * (1 - cos(angle)) + w * sqrt(L) * sin(angle)) / L;
+  rotationMatrix[1][1] = (v2 + (u2 + w2) * cos(angle)) / L;
+  rotationMatrix[2][1] = (v * w * (1 - cos(angle)) - u * sqrt(L) * sin(angle)) / L;
+  rotationMatrix[3][1] = 0.0;
 
-  (*rotationMatrix)[2] = (u * w * (1 - cos(angle)) - v * sqrt(L) * sin(angle)) / L;
-  (*rotationMatrix)[6] = (v * w * (1 - cos(angle)) + u * sqrt(L) * sin(angle)) / L;
-  (*rotationMatrix)[10] = (w2 + (u2 + v2) * cos(angle)) / L;
-  (*rotationMatrix)[14] = 0.0;
+  rotationMatrix[0][2] = (u * w * (1 - cos(angle)) - v * sqrt(L) * sin(angle)) / L;
+  rotationMatrix[1][2] = (v * w * (1 - cos(angle)) + u * sqrt(L) * sin(angle)) / L;
+  rotationMatrix[2][2] = (w2 + (u2 + v2) * cos(angle)) / L;
+  rotationMatrix[3][2] = 0.0;
 
-  (*rotationMatrix)[3] = 0.0;
-  (*rotationMatrix)[7] = 0.0;
-  (*rotationMatrix)[11] = 0.0;
-  (*rotationMatrix)[15] = 1.0;*/
-  return;
+  rotationMatrix[0][3] = 0.0;
+  rotationMatrix[1][3] = 0.0;
+  rotationMatrix[2][3] = 0.0;
+  rotationMatrix[3][3] = 1.0;
+  return rotationMatrix;
 }
