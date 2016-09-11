@@ -11,6 +11,10 @@
 #include <linux/input.h>
 #include <stdbool.h>
 #include <string>
+#include <vector>
+#include <iostream>
+#include <cstring>
+#include <memory>
 
 std::string inputstream = "";
 
