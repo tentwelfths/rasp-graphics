@@ -169,7 +169,14 @@ bool Input ( void )
         if(evp->type == 1)
         {
           inputstream += (unsigned char)(evp->code);
-          inputstream += (unsigned char)(evp->value);
+          if(evp->value == 0)
+          {
+            inputstream += '0';
+          }
+          else if(evp->value == 1)
+          {
+            inputstream += '1';
+          }
           //if(evp->value == 1) 
           //{
           //    if(evp->code == KEY_LEFTCTRL)
@@ -185,8 +192,8 @@ bool Input ( void )
           //      printf("Left Shift key pressed\n");
           //    }
           //}
-          //if((evp->code == KEY_Q) && (evp->value == 1))
-          //    ret = true;
+          if((evp->code == KEY_Q) && (evp->value == 1))
+              ret = true;
         }
       }
 
@@ -224,7 +231,7 @@ int main ( int argc, char *argv[] )
       std::vector<char> v(inputstream.length() + 1);
       std::strcpy(&v[0], inputstream.c_str());
       char* pc = &v[0];
-      std::cout<<inputstream<<std::endl;
+      //std::cout<<inputstream<<std::endl;
       std::cout<<"Bytes sent: "<<n.Send(pc, inputstream.length())<<std::endl;
       inputstream = "";
     }
