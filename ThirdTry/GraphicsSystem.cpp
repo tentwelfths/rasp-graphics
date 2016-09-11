@@ -233,7 +233,7 @@ void GraphicsSystem::Draw()
   glClear ( GL_COLOR_BUFFER_BIT );
   float fov = 45.f;
   // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-  glm::mat4 Projection = glm::perspective(fov, 4.0f / 3.0f, 0.1f, 100.0f);
+  glm::mat4 Projection = glm::perspective(fov, (float)width / (float)height, 0.1f, 100.0f);
   //glm::mat4 Projection = glm::ortho(-4, 4, 4, -4);
   // Or, for an ortho camera :
   //glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
@@ -406,7 +406,7 @@ bool GraphicsSystem::WinCreate()
    }
    
    // You can hardcode the resolution here:
-   display_width = 640;
+   display_width = 800;
    display_height = 480;
    width = display_width;
    height = display_height;
