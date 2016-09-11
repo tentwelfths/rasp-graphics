@@ -1,7 +1,7 @@
 #include "GraphicsSystem.h"
 #include "Object.h"
 
-glm::mat4 setUpRotationMatrix(glm::mat4 rotationMatrix, float angle, float u, float v, float w)
+glm::mat4 setUpRotationMatrix(glm::mat4 rotationMatrix, float angle, float u, float v, float w);
 
 bool CreateEGLContext ( EGLNativeWindowType hWnd, EGLDisplay* eglDisplay,
                               EGLContext* eglContext, EGLSurface* eglSurface,
