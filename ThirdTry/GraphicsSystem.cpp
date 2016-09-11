@@ -144,9 +144,9 @@ GraphicsSystem::GraphicsSystem()
     "uniform mat4 Projection;\n"
     "\n"
     "void main(){\n"
-    //"  mat4 MVP = Projection * View * Position * Rotation * Scale;\n"
+    "  mat4 MVP = Projection * View * Position * Rotation * Scale;\n"
     "  // Output position of the vertex, in clip space : MVP * position\n"
-    "  gl_Position =  /*MVP * */vec4(vertexPosition_modelspace,1);\n"
+    "  gl_Position =  MVP * vec4(vertexPosition_modelspace,1);\n"
     "  v_texCoord = vec2(vertexUV.x, 1.0 - vertexUV.y);  \n"
     "}                                \n";
    
