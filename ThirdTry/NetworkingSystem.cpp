@@ -34,7 +34,7 @@ NetworkingSystem::NetworkingSystem(int port, const char * ip)
 
 int NetworkingSystem::Send(const char * buffer, int len)
 {
-  n = write(sockfd,buffer,len);
+  return write(sockfd,buffer,len);
 }
 void NetworkingSystem::Receive(const char * buffer, int len)
 {
