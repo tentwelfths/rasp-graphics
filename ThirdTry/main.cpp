@@ -164,8 +164,8 @@ bool Input ( void )
         evp = &ev[n++];
         if(evp->type == 1)
         {
-          inputstream += std::to_char_type(evp->code);
-          inputstream += std::to_char_type(evp->value);
+          inputstream += (unsigned char)(evp->code);
+          inputstream += (unsigned char)(evp->value);
           //if(evp->value == 1) 
           //{
           //    if(evp->code == KEY_LEFTCTRL)
