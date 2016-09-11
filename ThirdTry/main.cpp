@@ -33,7 +33,7 @@ bool Input ( void )
     regex_t kbd,mouse;
 
     char fullPath[1024];
-    static char *dirName = "/dev/input/by-id";
+    char *dirName = "/dev/input/by-id";
     int result;
 
     if(regcomp(&kbd,"event-kbd",0)!=0)
@@ -217,7 +217,10 @@ int main ( int argc, char *argv[] )
     g.Draw();
     toSend = !toSend;
     if(toSend){
-      n.Send(inputstream.c_str(), inputstream.length());
+      std::vector<char> v(inputstream.length() + 1);
+      std::strcpy(&v[0], inputstream.c_str());
+      char* pc = &v[0];
+      n.Send(pc, inputstream.length());
       inputstream = "";
     }
   }
