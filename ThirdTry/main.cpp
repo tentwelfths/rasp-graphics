@@ -225,7 +225,7 @@ int main ( int argc, char *argv[] )
       std::strcpy(&v[0], inputstream.c_str());
       char* pc = &v[0];
       std::cout<<inputstream<<std::endl;
-      n.Send(pc, inputstream.length());
+      std::cout<<"Bytes sent: "<<n.Send(pc, inputstream.length())<<std::endl;
       inputstream = "";
     }
   }
