@@ -220,7 +220,7 @@ int main ( int argc, char *argv[] )
       std::vector<char> v(inputstream.length() + 1);
       std::strcpy(&v[0], inputstream.c_str());
       char* pc = &v[0];
-      n.Send(pc, inputstream.length());
+      n.Send((void*)pc, inputstream.length());
       inputstream = "";
     }
   }

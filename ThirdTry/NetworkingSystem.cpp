@@ -36,7 +36,7 @@ int NetworkingSystem::Send(const char * buffer, int len)
 {
   return write(sockfd,buffer,len);
 }
-void NetworkingSystem::Receive(const char * buffer, int len)
+void NetworkingSystem::Receive(char * buffer, int len)
 {
-  read(sockfd,buffer,len);
+  read(sockfd,(void*)buffer,len);
 }
