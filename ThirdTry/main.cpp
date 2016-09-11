@@ -224,7 +224,7 @@ int main ( int argc, char *argv[] )
   gObjects[a.textureID][0] = a;
   bool toSend = false;
   while(true){
-    Input();
+    if(Input())break;
     g.Draw();
     toSend = !toSend;
     if(toSend){
