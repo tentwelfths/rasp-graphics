@@ -30,3 +30,13 @@ NetworkingSystem::NetworkingSystem(int port, const char * ip)
   char one = 1;
   ioctl(sockfd, FIONBIO, (char *)&one); 
 }
+
+
+int NetworkingSystem::Send(const char * buffer, int len)
+{
+  n = write(sockfd,buffer,len);
+}
+void NetworkingSystem::Receive(const char * buffer, int len)
+{
+  read(sockfd,buffer,len);
+}
