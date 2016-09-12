@@ -22,7 +22,7 @@ Object gObjects[50][50];
 int count[50];
 
 bool Input ( void )
-{/*
+{
   static int first = 1;
   static int mouseFd = -1;
   static int keyboardFd = -1;
@@ -206,7 +206,7 @@ bool Input ( void )
     }
 
     return(ret);
-*/
+/*
 static int first = 1;
     static int mouseFd = -1;
     static int keyboardFd = -1;
@@ -388,7 +388,7 @@ std::cout<<evp->code<<":"<<evp->value<<std::endl;
     }
 
     return(ret);
-
+*/
 }
 
 
@@ -518,7 +518,7 @@ int main ( int argc, char *argv[] )
   //struct timeval t1, t2;
   //struct timezone tz;
   //float deltatime;
-  while(!Input()){
+  while(Input()){
     sleep(1);
   }return 0;
   /*while(Input()){
