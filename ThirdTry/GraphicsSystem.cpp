@@ -251,7 +251,7 @@ void GraphicsSystem::Draw()
   for(int i = 0; i < 50; ++i)
   {
     if(gObjects[i][0].inUse == false)continue;
-    glBindTexture ( GL_TEXTURE_2D, i );
+    glBindTexture ( GL_TEXTURE_2D, i );  
        // Bind the texture
     glActiveTexture ( GL_TEXTURE0 );
 
