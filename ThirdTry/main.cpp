@@ -292,6 +292,8 @@ int main ( int argc, char *argv[] )
     do{
       memset((void*)buf, 0, 1024);
       netResult = n.Receive(buf,1023);
+      
+      std::cout<<"netResult: "<<netResult<<std::endl;
       pos = 0;
       if(netResult > 0)
       {
