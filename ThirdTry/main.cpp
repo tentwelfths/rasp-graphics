@@ -288,7 +288,11 @@ int main ( int argc, char *argv[] )
   int pos = 0;
   int clientNumber = -1;
   int netResult = 0;
+  struct timeval t1, t2;
+  struct timezone tz;
+  float deltatime;
   while(true){
+    gettimeofday ( &t1 , &tz );
     if(Input())break;
     bool updated = false;
     do{
@@ -322,6 +326,11 @@ int main ( int argc, char *argv[] )
       std::cout<<"Bytes sent: "<<n.Send(pc, inputstream.length())<<std::endl;
       inputstream = "";
     }
+    
+    do{
+      gettimeofday(&t2, &tz);
+      deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
+    }while(deltatime < 1.0f/30.0f);
   }
   return 0;
 }
