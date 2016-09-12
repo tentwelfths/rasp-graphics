@@ -460,7 +460,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
         //std::cout<<pos<<"+"<<len <<" xPos: "<< xPos <<std::endl;
         pos += sizeof(float);
         const float yPos = *reinterpret_cast<const float*>(&(buf[pos]));
-        //std::cout<<pos<<"="<<len <<" yPos: "<< yPos <<std::endl;
+        std::cout<<pos<<"="<<len <<" yPos: "<< yPos <<std::endl;
         pos += sizeof(float);
         const float zPos = *reinterpret_cast<const float*>(&(buf[pos]));
         //std::cout<<pos<<"]"<<len <<" zPos: "<< zPos <<std::endl;

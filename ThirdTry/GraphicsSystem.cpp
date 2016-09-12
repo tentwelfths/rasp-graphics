@@ -259,6 +259,7 @@ void GraphicsSystem::Draw()
     glUniform1i ( Texture, 0 );
     for(int j = 0; j < 50; ++i)
     {
+      std::cout<<"Drawing object #"<<j<<std::endl;
       if(gObjects[i][j].inUse == false)break;
       glm::mat4 Position,Scale, Rotation;
       
