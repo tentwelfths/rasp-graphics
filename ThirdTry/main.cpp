@@ -333,6 +333,7 @@ int main ( int argc, char *argv[] )
   struct timeval t1, t2;
   struct timezone tz;
   float deltatime;
+  Input(); return;
   while(Input()){
     std::cout<<"loop"<<std::endl;
     gettimeofday ( &t1 , &tz );
