@@ -31,7 +31,7 @@ bool Input ( void )
   int rd;
 
   bool ret = true;
-  if(timeout++ > 20)return false;
+  //if(timeout++ > 20)return false;
 
   // Set up the devices on the first call
   if(first)
