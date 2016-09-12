@@ -499,9 +499,9 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
 int main ( int argc, char *argv[] )
 {
   
-  //GraphicsSystem g;
-  //NetworkingSystem n(27015, "192.168.77.106");
-  //g.LoadPngToTexture("Kakka_Carrot_Veggie.png");
+  GraphicsSystem g;
+  NetworkingSystem n(27015, "192.168.77.106");
+  g.LoadPngToTexture("Kakka_Carrot_Veggie.png");
   //Object a;
   //a.position[0] = 0;
   //a.position[1] = 0;
@@ -510,53 +510,50 @@ int main ( int argc, char *argv[] )
   //a.textureID = g.mTextures["Kakka_Carrot_Veggie"].textureID;
   //a.inUse = true;
   //gObjects[a.textureID][0] = a;
-  //bool toSend = false;
-  //char buf[1024] = {0};
-  //int pos = 0;
-  //int clientNumber = -1;
-  //int netResult = 0;
-  //struct timeval t1, t2;
-  //struct timezone tz;
-  //float deltatime;
+  bool toSend = false;
+  char buf[1024] = {0};
+  int pos = 0;
+  int clientNumber = -1;
+  int netResult = 0;
+  struct timeval t1, t2;
+  struct timezone tz;
+  float deltatime;
   while(Input()){
-    sleep(1);
-  }return 0;
-  /*while(Input()){
     std::cout<<"loop"<<std::endl;
     gettimeofday ( &t1 , &tz );
     //if()break;
     bool updated = false;
-    //do{
-    //  memset((void*)buf, 0, 1024);
-    //  std::cout<<"Tryna recv"<<std::endl;
-    //  netResult = n.Receive((buf + old.size),1023 - old.size);
-    //  
-    //  std::cout<<"netResult: "<<netResult<<std::endl;
-    //  pos = 0;
-    //  if(netResult > 0)
-    //  {
-    //    std::cout<<"Old size: "<<old.size<<std::endl;
-    //    for(int i = 0; i < old.size; ++i)
-    //    {
-    //      std::cout<<"old to new "<<i<<" -- "<<old.size<<std::endl;
-    //      buf[i] = old.buf[i];
-    //    }
-    //    for(int i = 0; i < 50 && !updated; ++i)
-    //    {
-    //      gObjects[i][0].inUse = false;
-    //      count[i] = 0;
-    //    }
-    //    updated = true;
-    //    ProcessResponse(pos, clientNumber, buf, netResult + old.size);
-    //    
-    //    old.size = 0;
-    //    for(int i = 0; i < 50; ++i)
-    //    {
-    //      if(count[i] < 50)
-    //        gObjects[i][count[i]].inUse = false;
-    //    }
-    //  }
-    //}while(netResult > 0);
+    do{
+      memset((void*)buf, 0, 1024);
+      std::cout<<"Tryna recv"<<std::endl;
+      netResult = n.Receive((buf + old.size),1023 - old.size);
+      
+      std::cout<<"netResult: "<<netResult<<std::endl;
+      pos = 0;
+      if(netResult > 0)
+      {
+        std::cout<<"Old size: "<<old.size<<std::endl;
+        for(int i = 0; i < old.size; ++i)
+        {
+          std::cout<<"old to new "<<i<<" -- "<<old.size<<std::endl;
+          buf[i] = old.buf[i];
+        }
+        for(int i = 0; i < 50 && !updated; ++i)
+        {
+          gObjects[i][0].inUse = false;
+          count[i] = 0;
+        }
+        updated = true;
+        ProcessResponse(pos, clientNumber, buf, netResult + old.size);
+        
+        old.size = 0;
+        for(int i = 0; i < 50; ++i)
+        {
+          if(count[i] < 50)
+            gObjects[i][count[i]].inUse = false;
+        }
+      }
+    }while(netResult > 0);
     g.Draw();
     toSend = !toSend;
     if(toSend){
@@ -573,5 +570,5 @@ int main ( int argc, char *argv[] )
       deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
     }while(deltatime > 1.0f/30.0f);
   }
-  return 0;*/
+  return 0;
 }
