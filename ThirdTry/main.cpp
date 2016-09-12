@@ -234,9 +234,9 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
     {
       std::cout<<"Getting client number"<<std::endl;
       int totalNeeded = 3;
-      if(pos + totalNeeded >= len || pos + totalNeeded > 1023)
+      if(pos + totalNeeded > len || pos + totalNeeded > 1023)
       {
-        std::cout<<"Client number goes too far"<<pos<<"+"<<totalNeeded<<">="<<len<<std::endl;
+        std::cout<<"Client number goes too far"<<pos<<"+"<<totalNeeded<<">"<<len<<std::endl;
         old.size = len - pos;
         for(int i = 0; pos<len; ++pos, ++i)
         {
@@ -252,9 +252,9 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
     {
       std::cout<<"Getting Object"<<std::endl;
       int totalNeeded = sizeof(unsigned int) + (sizeof(float) * 6) + 2;
-      if(pos + totalNeeded >= len || pos + totalNeeded > 1023)
+      if(pos + totalNeeded > len || pos + totalNeeded > 1023)
       {
-        std::cout<<"Object goes too far"<<pos<<"+"<<totalNeeded<<">="<<len<<std::endl;
+        std::cout<<"Object goes too far"<<pos<<"+"<<totalNeeded<<">"<<len<<std::endl;
         old.size = len - pos;
         for(int i = 0; pos<len; ++pos, ++i)
         {
