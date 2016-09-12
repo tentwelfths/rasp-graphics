@@ -218,7 +218,12 @@ void GetClientNumber(int & pos, int & clientNumber, const char * buf)
   }
 }
 
-
+struct oldData
+{
+  int size;
+  char buf[1023];
+}
+oldData old;
 
 void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
 {
@@ -232,6 +237,17 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
     }
     else if(buf[pos] == '!') //object
     {
+      int totalNeeded = sizeof(unsigned int) + (sizeof(float) * 6) + 2;
+      if(pos + totalNeeded >= len)
+      {
+        old.size = len - pos;
+        for(int i = 0; pos<len; ++pos, ++i)
+        {
+          old.buf[i] = buf[pos];
+        }
+        return;
+      }
+      old.size = 0;
       ++pos;
       std::cout<<"Response found an object!!!!"<<std::endl;
       const unsigned int textureID = *reinterpret_cast<const unsigned int*>(&(buf[pos]));
@@ -307,8 +323,11 @@ int main ( int argc, char *argv[] )
     bool updated = false;
     do{
       memset((void*)buf, 0, 1024);
-      netResult = n.Receive(buf,1023);
-      
+      netResult = n.Receive((buf + old.size),1023 - old.size);
+      for(int i = 0; i < old.size; ++i)
+      {
+        buf[i] = old.buf[i];
+      }
       std::cout<<"netResult: "<<netResult<<std::endl;
       pos = 0;
       if(netResult > 0)
