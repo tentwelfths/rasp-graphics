@@ -227,6 +227,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
     if(buf[pos] == '~')//client number
     {
       GetClientNumber(pos,clientNumber,buf);
+      std::cout<<"Client NUmber is " <<clientNumber<<std::endl;
       ++pos;
     }
     else if(buf[pos] == '!') //object
