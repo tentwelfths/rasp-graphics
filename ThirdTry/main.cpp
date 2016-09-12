@@ -222,7 +222,7 @@ struct oldData
 {
   int size;
   char buf[1023];
-}
+};
 oldData old;
 
 void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
