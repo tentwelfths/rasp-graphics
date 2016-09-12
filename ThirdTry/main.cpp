@@ -233,20 +233,20 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
     else if(buf[pos] == '!') //object
     {
       std::cout<<"Response found an object!!!!"<<std::endl;
-      const unsigned int textureID = std::atoi(&(buf[pos]));
-      while(buf[pos++] != ' ');
-      const float xPos = std::atof(&(buf[pos]));
-      while(buf[pos++] != ' ');
-      const float yPos = std::atof(&(buf[pos]));
-      while(buf[pos++] != ' ');
-      const float zPos = std::atof(&(buf[pos]));
-      while(buf[pos++] != ' ');
-      const float xSca = std::atof(&(buf[pos]));
-      while(buf[pos++] != ' ');
-      const float ySca = std::atof(&(buf[pos]));
-      while(buf[pos++] != ' ');
-      const float rot  = std::atof(&(buf[pos]));
-      while(buf[pos++] != '!');
+      const unsigned int textureID = *reinterpret_cast<const unsigned int*>(&(buf[pos]));
+      pos += sizeof(unsigned int);
+      const float xPos = *reinterpret_cast<const float*>(&(buf[pos]));
+      pos += sizeof(float);
+      const float yPos = *reinterpret_cast<const float*>(&(buf[pos]));
+      pos += sizeof(float);
+      const float zPos = *reinterpret_cast<const float*>(&(buf[pos]));
+      pos += sizeof(float);
+      const float xSca = *reinterpret_cast<const float*>(&(buf[pos]));
+      pos += sizeof(float);
+      const float ySca = *reinterpret_cast<const float*>(&(buf[pos]));
+      pos += sizeof(float);
+      const float rot  = *reinterpret_cast<const float*>(&(buf[pos]));
+      pos += sizeof(float);
       gObjects[textureID][count[textureID]].position[0] = xPos;
       gObjects[textureID][count[textureID]].position[1] = yPos;
       gObjects[textureID][count[textureID]].position[2] = zPos;
@@ -283,7 +283,7 @@ int main ( int argc, char *argv[] )
   //a.textureID = g.mTextures["Kakka_Carrot_Veggie"].textureID;
   //a.inUse = true;
   //gObjects[a.textureID][0] = a;
-  bool toSend = false;
+    bool toSend = false;
   char buf[1024] = {0};
   int pos = 0;
   int clientNumber = -1;
@@ -330,7 +330,7 @@ int main ( int argc, char *argv[] )
     do{
       gettimeofday(&t2, &tz);
       deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
-    }while(deltatime < 1.0f/30.0f);
+    }while(deltatime > 1.0f/30.0f);
   }
   return 0;
 }
