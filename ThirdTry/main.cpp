@@ -26,11 +26,12 @@ bool Input ( void )
   static int first = 1;
   static int mouseFd = -1;
   static int keyboardFd = -1;
+  static int timeout = 0;
   struct input_event ev[64];
   int rd;
 
   bool ret = true;
-
+  if(timeout++ > 100000)return false;
 
   // Set up the devices on the first call
   if(first)
@@ -103,7 +104,7 @@ bool Input ( void )
     first = 0;
     if((keyboardFd == -1) || (mouseFd == -1)) return false;
 
-    }
+  }
 
     
     // Read events from mouse
@@ -333,7 +334,7 @@ int main ( int argc, char *argv[] )
   struct timeval t1, t2;
   struct timezone tz;
   float deltatime;
-  Input();Input();Input();Input();Input();Input();Input(); return 0;
+  while(Input());return 0;
   while(Input()){
     std::cout<<"loop"<<std::endl;
     gettimeofday ( &t1 , &tz );
