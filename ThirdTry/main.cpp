@@ -29,7 +29,7 @@ bool Input ( void )
   struct input_event ev[64];
   int rd;
 
-  bool ret = false;
+  bool ret = true;
 
 
   // Set up the devices on the first call
@@ -46,19 +46,19 @@ bool Input ( void )
     if(regcomp(&kbd,"event-kbd",0)!=0)
     {
         printf("regcomp for kbd failed\n");
-        return true;
+        return false;
 
     }
     if(regcomp(&mouse,"event-mouse",0)!=0)
     {
         printf("regcomp for mouse failed\n");
-        return true;
+        return false;
 
     }
 
     if ((dirp = opendir(dirName)) == NULL) {
         perror("couldn't open '/dev/input/by-id'");
-        return true;
+        return false;
     }
 
     // Find any files that match the regex for keyboard or mouse
@@ -101,7 +101,7 @@ bool Input ( void )
 
     
     first = 0;
-    if((keyboardFd == -1) || (mouseFd == -1)) return true;
+    if((keyboardFd == -1) || (mouseFd == -1)) return false;
 
     }
 
@@ -196,7 +196,7 @@ bool Input ( void )
           //    }
           //}
           if((evp->code == KEY_Q) && (evp->value == 1))
-              ret = true;
+              ret = false;
         }
       }
 
@@ -333,41 +333,41 @@ int main ( int argc, char *argv[] )
   struct timeval t1, t2;
   struct timezone tz;
   float deltatime;
-  while(true){
+  while(Input()){
     std::cout<<"loop"<<std::endl;
     gettimeofday ( &t1 , &tz );
-    if(Input())break;
+    //if()break;
     bool updated = false;
     //do{
-      memset((void*)buf, 0, 1024);
-      std::cout<<"Tryna recv"<<std::endl;
-      netResult = n.Receive((buf + old.size),1023 - old.size);
-      
-      std::cout<<"netResult: "<<netResult<<std::endl;
-      pos = 0;
-      if(netResult > 0)
-      {
-        std::cout<<"Old size: "<<old.size<<std::endl;
-        for(int i = 0; i < old.size; ++i)
-        {
-          std::cout<<"old to new "<<i<<" -- "<<old.size<<std::endl;
-          buf[i] = old.buf[i];
-        }
-        for(int i = 0; i < 50 && !updated; ++i)
-        {
-          gObjects[i][0].inUse = false;
-          count[i] = 0;
-        }
-        updated = true;
-        ProcessResponse(pos, clientNumber, buf, netResult + old.size);
-        
-        old.size = 0;
-        for(int i = 0; i < 50; ++i)
-        {
-          if(count[i] < 50)
-            gObjects[i][count[i]].inUse = false;
-        }
-      }
+    //  memset((void*)buf, 0, 1024);
+    //  std::cout<<"Tryna recv"<<std::endl;
+    //  netResult = n.Receive((buf + old.size),1023 - old.size);
+    //  
+    //  std::cout<<"netResult: "<<netResult<<std::endl;
+    //  pos = 0;
+    //  if(netResult > 0)
+    //  {
+    //    std::cout<<"Old size: "<<old.size<<std::endl;
+    //    for(int i = 0; i < old.size; ++i)
+    //    {
+    //      std::cout<<"old to new "<<i<<" -- "<<old.size<<std::endl;
+    //      buf[i] = old.buf[i];
+    //    }
+    //    for(int i = 0; i < 50 && !updated; ++i)
+    //    {
+    //      gObjects[i][0].inUse = false;
+    //      count[i] = 0;
+    //    }
+    //    updated = true;
+    //    ProcessResponse(pos, clientNumber, buf, netResult + old.size);
+    //    
+    //    old.size = 0;
+    //    for(int i = 0; i < 50; ++i)
+    //    {
+    //      if(count[i] < 50)
+    //        gObjects[i][count[i]].inUse = false;
+    //    }
+    //  }
     //}while(netResult > 0);
     g.Draw();
     toSend = !toSend;
@@ -380,10 +380,10 @@ int main ( int argc, char *argv[] )
       inputstream = "";
     }
     
-    //do{
-    //  gettimeofday(&t2, &tz);
-    //  deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
-    //}while(deltatime > 1.0f/30.0f);
+    do{
+      gettimeofday(&t2, &tz);
+      deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
+    }while(deltatime > 1.0f/30.0f);
   }
   return 0;
 }
