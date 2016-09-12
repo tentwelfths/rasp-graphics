@@ -92,7 +92,7 @@ bool Input ( void )
         }
       }
     } while (dp != NULL);
-
+    std::cout<<"...."<<std::endl;
     closedir(dirp);
 
 
