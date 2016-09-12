@@ -257,7 +257,7 @@ void GraphicsSystem::Draw()
 
     // Set the sampler texture unit to 0
     glUniform1i ( Texture, 0 );
-    for(int j = 0; j < 50; ++i)
+    for(int j = 0; j < 50; ++j)
     {
       std::cout<<"Drawing object #"<<j<<std::endl;
       if(gObjects[i][j].inUse == false)break;
