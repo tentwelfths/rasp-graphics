@@ -231,19 +231,19 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
     }
     else if(buf[pos] == '!') //object
     {
-      int textureID = *reinterpret_cast<int*>(&(buf[pos]));
+      const int textureID = *reinterpret_cast<const int*>(&(buf[pos]));
       pos += sizeof(int);
-      int xPos = reinterpret_cast<float*>(&(buf[pos]));
+      const float xPos = *reinterpret_cast<const float*>(&(buf[pos]));
       pos += sizeof(float);
-      int yPos = reinterpret_cast<float*>(&(buf[pos]));
+      const float yPos = *reinterpret_cast<const float*>(&(buf[pos]));
       pos += sizeof(float);
-      int zPos = reinterpret_cast<float*>(&(buf[pos]));
+      const float zPos = *reinterpret_cast<const float*>(&(buf[pos]));
       pos += sizeof(float);
-      int xSca = reinterpret_cast<float*>(&(buf[pos]));
+      const float xSca = *reinterpret_cast<const float*>(&(buf[pos]));
       pos += sizeof(float);
-      int ySca = reinterpret_cast<float*>(&(buf[pos]));
+      const float ySca = *reinterpret_cast<const float*>(&(buf[pos]));
       pos += sizeof(float);
-      int rot  = reinterpret_cast<float*>(&(buf[pos]));
+      const float rot  = *reinterpret_cast<const float*>(&(buf[pos]));
       pos += sizeof(float);
       gObjects[textureID][count[textureID]].position[0] = xPos;
       gObjects[textureID][count[textureID]].position[1] = yPos;
