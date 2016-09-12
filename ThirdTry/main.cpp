@@ -290,6 +290,7 @@ int main ( int argc, char *argv[] )
   int netResult = 0;
   while(true){
     if(Input())break;
+    bool updated = false;
     do{
       memset((void*)buf, 0, 1024);
       netResult = n.Receive(buf,1023);
@@ -298,11 +299,12 @@ int main ( int argc, char *argv[] )
       pos = 0;
       if(netResult > 0)
       {
-        for(int i = 0; i < 50; ++i)
+        for(int i = 0; i < 50 && !updated; ++i)
         {
           gObjects[i][0].inUse = false;
           count[i] = 0;
         }
+        updated = true;
         ProcessResponse(pos, clientNumber, buf, netResult);
         for(int i = 0; i < 50; ++i)
         {
