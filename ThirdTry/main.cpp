@@ -433,54 +433,57 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
       std::cout<<"Client NUmber is " <<clientNumber<<std::endl;
       ++pos;
     }
-    else if(buf[pos] == '!') //object
+    else if(buf[pos] == '!') //objects beginning
     {
-      std::cout<<"Getting Object"<<std::endl;
-      int totalNeeded = sizeof(unsigned int) + (sizeof(float) * 6) + 2;
-      if(pos + totalNeeded > len || pos + totalNeeded > 1023)
-      {
-        std::cout<<"Object goes too far"<<pos<<"+"<<totalNeeded<<">"<<len<<std::endl;
-        old.size = len - pos;
-        for(int i = 0; pos<len; ++pos, ++i)
-        {
-          old.buf[i] = buf[pos];
-        }
-        return;
-      }
-      old.size = 0;
       ++pos;
-      std::cout<<"Response found an object!!!!"<<std::endl;
-      const unsigned int textureID = *reinterpret_cast<const unsigned int*>(&(buf[pos]));
-      std::cout<<pos<<"-"<<len <<" TextureID: "<< textureID <<std::endl;
-      pos += sizeof(unsigned int);
-      const float xPos = *reinterpret_cast<const float*>(&(buf[pos]));
-      std::cout<<pos<<"+"<<len <<" xPos: "<< xPos <<std::endl;
-      pos += sizeof(float);
-      const float yPos = *reinterpret_cast<const float*>(&(buf[pos]));
-      std::cout<<pos<<"="<<len <<" yPos: "<< yPos <<std::endl;
-      pos += sizeof(float);
-      const float zPos = *reinterpret_cast<const float*>(&(buf[pos]));
-      std::cout<<pos<<"]"<<len <<" zPos: "<< zPos <<std::endl;
-      pos += sizeof(float);
-      const float xSca = *reinterpret_cast<const float*>(&(buf[pos]));
-      std::cout<<pos<<"["<<len <<" xSca: "<< xSca <<std::endl;
-      pos += sizeof(float);
-      const float ySca = *reinterpret_cast<const float*>(&(buf[pos]));
-      std::cout<<pos<<"*"<<len <<" ySca: "<< ySca <<std::endl;
-      pos += sizeof(float);
-      const float rot  = *reinterpret_cast<const float*>(&(buf[pos]));
-      std::cout<<pos<<"~"<<len <<" rot: "<< rot <<std::endl;
-      pos += sizeof(float);
-      
-      gObjects[textureID][count[textureID]].position[0] = xPos;
-      gObjects[textureID][count[textureID]].position[1] = yPos;
-      gObjects[textureID][count[textureID]].position[2] = zPos;
-      gObjects[textureID][count[textureID]].scale[0] = xSca;
-      gObjects[textureID][count[textureID]].scale[1] = ySca;
-      gObjects[textureID][count[textureID]].rotation[2] = rot;
-      gObjects[textureID][count[textureID]].textureID = textureID;
-      gObjects[textureID][count[textureID]].inUse = true;
-      count[textureID]++;
+      while(buf[pos] != '!')
+      {
+        std::cout<<"Getting Object"<<std::endl;
+        int totalNeeded = sizeof(unsigned int) + (sizeof(float) * 6) + 2;
+        if(pos + totalNeeded > len || pos + totalNeeded > 1023)
+        {
+          std::cout<<"Object goes too far"<<pos<<"+"<<totalNeeded<<">"<<len<<std::endl;
+          old.size = len - pos;
+          for(int i = 0; pos<len; ++pos, ++i)
+          {
+            old.buf[i] = buf[pos];
+          }
+          return;
+        }
+        old.size = 0;
+        std::cout<<"Response found an object!!!!"<<std::endl;
+        const unsigned int textureID = *reinterpret_cast<const unsigned int*>(&(buf[pos]));
+        std::cout<<pos<<"-"<<len <<" TextureID: "<< textureID <<std::endl;
+        pos += sizeof(unsigned int);
+        const float xPos = *reinterpret_cast<const float*>(&(buf[pos]));
+        std::cout<<pos<<"+"<<len <<" xPos: "<< xPos <<std::endl;
+        pos += sizeof(float);
+        const float yPos = *reinterpret_cast<const float*>(&(buf[pos]));
+        std::cout<<pos<<"="<<len <<" yPos: "<< yPos <<std::endl;
+        pos += sizeof(float);
+        const float zPos = *reinterpret_cast<const float*>(&(buf[pos]));
+        std::cout<<pos<<"]"<<len <<" zPos: "<< zPos <<std::endl;
+        pos += sizeof(float);
+        const float xSca = *reinterpret_cast<const float*>(&(buf[pos]));
+        std::cout<<pos<<"["<<len <<" xSca: "<< xSca <<std::endl;
+        pos += sizeof(float);
+        const float ySca = *reinterpret_cast<const float*>(&(buf[pos]));
+        std::cout<<pos<<"*"<<len <<" ySca: "<< ySca <<std::endl;
+        pos += sizeof(float);
+        const float rot  = *reinterpret_cast<const float*>(&(buf[pos]));
+        std::cout<<pos<<"~"<<len <<" rot: "<< rot <<std::endl;
+        pos += sizeof(float);
+        
+        gObjects[textureID][count[textureID]].position[0] = xPos;
+        gObjects[textureID][count[textureID]].position[1] = yPos;
+        gObjects[textureID][count[textureID]].position[2] = zPos;
+        gObjects[textureID][count[textureID]].scale[0] = xSca;
+        gObjects[textureID][count[textureID]].scale[1] = ySca;
+        gObjects[textureID][count[textureID]].rotation[2] = rot;
+        gObjects[textureID][count[textureID]].textureID = textureID;
+        gObjects[textureID][count[textureID]].inUse = true;
+        count[textureID]++;
+      }
       ++pos;
     }
     else if(buf[pos] == '@')//audio cue
