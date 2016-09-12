@@ -336,7 +336,7 @@ int main ( int argc, char *argv[] )
     gettimeofday ( &t1 , &tz );
     if(Input())break;
     bool updated = false;
-    do{
+    //do{
       memset((void*)buf, 0, 1024);
       netResult = n.Receive((buf + old.size),1023 - old.size);
       for(int i = 0; i < old.size; ++i)
@@ -359,7 +359,7 @@ int main ( int argc, char *argv[] )
           gObjects[i][count[i]].inUse = false;
         }
       }
-    }while(netResult > 0);
+    //}while(netResult > 0);
     g.Draw();
     toSend = !toSend;
     if(toSend){
