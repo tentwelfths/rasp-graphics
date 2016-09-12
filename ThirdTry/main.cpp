@@ -181,6 +181,7 @@ bool Input ( void )
           {
             inputstream += '1';
           }
+          std::cout<<evp->code<<" --- "<<evp->value<<std::endl;
           //if(evp->value == 1) 
           //{
           //    if(evp->code == KEY_LEFTCTRL)
