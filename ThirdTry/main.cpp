@@ -18,6 +18,9 @@
 
 std::string inputstream = "";
 
+Object gObjects[50][50];
+int count[50];
+
 bool Input ( void )
 {
   static int first = 1;
@@ -264,8 +267,6 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
 }
 
 
-Object gObjects[50][50];
-int count[50];
 int main ( int argc, char *argv[] )
 {
   
