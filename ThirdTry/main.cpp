@@ -231,8 +231,9 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
     }
     else if(buf[pos] == '!') //object
     {
-      const int textureID = *reinterpret_cast<const int*>(&(buf[pos]));
-      pos += sizeof(int);
+      std::cout<<"Response found an object!!!!"<<std::endl;
+      const unsigned int textureID = *reinterpret_cast<const unsigned int*>(&(buf[pos]));
+      pos += sizeof(unsigned int);
       const float xPos = *reinterpret_cast<const float*>(&(buf[pos]));
       pos += sizeof(float);
       const float yPos = *reinterpret_cast<const float*>(&(buf[pos]));
