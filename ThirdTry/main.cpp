@@ -340,6 +340,7 @@ int main ( int argc, char *argv[] )
       memset((void*)buf, 0, 1024);
       std::cout<<"Tryna recv"<<std::endl;
       netResult = n.Receive((buf + old.size),1023 - old.size);
+      std::cout<<"Old size: "<<old.size<<std::endl;
       for(int i = 0; i < old.size; ++i)
       {
         std::cout<<"old to new"<<i<<std::endl;
@@ -359,7 +360,8 @@ int main ( int argc, char *argv[] )
         ProcessResponse(pos, clientNumber, buf, netResult);
         for(int i = 0; i < 50; ++i)
         {
-          gObjects[i][count[i]].inUse = false;
+          if(count[i] < 50)
+            gObjects[i][count[i]].inUse = false;
         }
       }
     //}while(netResult > 0);
@@ -374,10 +376,10 @@ int main ( int argc, char *argv[] )
       inputstream = "";
     }
     
-    do{
-      gettimeofday(&t2, &tz);
-      deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
-    }while(deltatime > 1.0f/30.0f);
+    //do{
+    //  gettimeofday(&t2, &tz);
+    //  deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
+    //}while(deltatime > 1.0f/30.0f);
   }
   return 0;
 }
