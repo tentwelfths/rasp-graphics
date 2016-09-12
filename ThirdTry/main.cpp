@@ -301,6 +301,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
     else if(buf[pos] == '@')//audio cue
     {
       //???????????????????????????
+      ++pos;
     }
     else{ //the fuck?
       ++pos;
@@ -333,6 +334,7 @@ int main ( int argc, char *argv[] )
   struct timezone tz;
   float deltatime;
   while(true){
+    std::cout<<"loop"<<std::endl;
     gettimeofday ( &t1 , &tz );
     if(Input())break;
     bool updated = false;
@@ -340,24 +342,26 @@ int main ( int argc, char *argv[] )
       memset((void*)buf, 0, 1024);
       std::cout<<"Tryna recv"<<std::endl;
       netResult = n.Receive((buf + old.size),1023 - old.size);
-      std::cout<<"Old size: "<<old.size<<std::endl;
-      for(int i = 0; i < old.size; ++i)
-      {
-        std::cout<<"old to new"<<i<<std::endl;
-        buf[i] = old.buf[i];
-      }
-      old.size = 0;
+      
       std::cout<<"netResult: "<<netResult<<std::endl;
       pos = 0;
       if(netResult > 0)
       {
+        std::cout<<"Old size: "<<old.size<<std::endl;
+        for(int i = 0; i < old.size; ++i)
+        {
+          std::cout<<"old to new "<<i<<" -- "<<old.size<<std::endl;
+          buf[i] = old.buf[i];
+        }
         for(int i = 0; i < 50 && !updated; ++i)
         {
           gObjects[i][0].inUse = false;
           count[i] = 0;
         }
         updated = true;
-        ProcessResponse(pos, clientNumber, buf, netResult);
+        ProcessResponse(pos, clientNumber, buf, netResult + old.size);
+        
+        old.size = 0;
         for(int i = 0; i < 50; ++i)
         {
           if(count[i] < 50)
