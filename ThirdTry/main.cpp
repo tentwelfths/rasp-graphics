@@ -232,6 +232,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
     }
     else if(buf[pos] == '!') //object
     {
+      ++pos;
       std::cout<<"Response found an object!!!!"<<std::endl;
       const unsigned int textureID = *reinterpret_cast<const unsigned int*>(&(buf[pos]));
       std::cout<<pos<<"-"<<len<<std::endl;
@@ -263,6 +264,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
       gObjects[textureID][count[textureID]].textureID = textureID;
       gObjects[textureID][count[textureID]].inUse = true;
       count[textureID]++;
+      ++pos;
     }
     else if(buf[pos] == '@')//audio cue
     {
