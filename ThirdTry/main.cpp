@@ -265,6 +265,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
 
 
 Object gObjects[50][50];
+int count[50];
 int main ( int argc, char *argv[] )
 {
   
@@ -283,6 +284,7 @@ int main ( int argc, char *argv[] )
   char buf[1024] = {0};
   int pos = 0;
   int clientNumber = -1;
+  int netResult = 0;
   while(true){
     if(Input())break;
     do{
