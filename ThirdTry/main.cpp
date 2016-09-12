@@ -338,11 +338,14 @@ int main ( int argc, char *argv[] )
     bool updated = false;
     //do{
       memset((void*)buf, 0, 1024);
+      std::cout<<"Tryna recv"<<std::endl;
       netResult = n.Receive((buf + old.size),1023 - old.size);
       for(int i = 0; i < old.size; ++i)
       {
+        std::cout<<"old to new"<<i<<std::endl;
         buf[i] = old.buf[i];
       }
+      old.size = 0;
       std::cout<<"netResult: "<<netResult<<std::endl;
       pos = 0;
       if(netResult > 0)
