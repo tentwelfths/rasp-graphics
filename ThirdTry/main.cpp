@@ -499,9 +499,9 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
 int main ( int argc, char *argv[] )
 {
   
-  GraphicsSystem g;
-  NetworkingSystem n(27015, "192.168.77.106");
-  g.LoadPngToTexture("Kakka_Carrot_Veggie.png");
+  //GraphicsSystem g;
+  //NetworkingSystem n(27015, "192.168.77.106");
+  //g.LoadPngToTexture("Kakka_Carrot_Veggie.png");
   //Object a;
   //a.position[0] = 0;
   //a.position[1] = 0;
@@ -510,14 +510,14 @@ int main ( int argc, char *argv[] )
   //a.textureID = g.mTextures["Kakka_Carrot_Veggie"].textureID;
   //a.inUse = true;
   //gObjects[a.textureID][0] = a;
-    bool toSend = false;
-  char buf[1024] = {0};
-  int pos = 0;
-  int clientNumber = -1;
-  int netResult = 0;
-  struct timeval t1, t2;
-  struct timezone tz;
-  float deltatime;
+  //bool toSend = false;
+  //char buf[1024] = {0};
+  //int pos = 0;
+  //int clientNumber = -1;
+  //int netResult = 0;
+  //struct timeval t1, t2;
+  //struct timezone tz;
+  //float deltatime;
   while(!Input()){
     sleep(1);
   }return 0;
