@@ -31,7 +31,7 @@ bool Input ( void )
   int rd;
 
   bool ret = true;
-  if(timeout++ > 1000000)return false;
+  if(timeout++ > 180)return false;
 
   // Set up the devices on the first call
   if(first)
@@ -160,6 +160,7 @@ bool Input ( void )
     // Read events from keyboard
 
     rd = read(keyboardFd,ev,sizeof(ev));
+    std::cout<<"read"<<std::endl;
     if(rd > 0)
     {
       int count,n;
@@ -335,7 +336,9 @@ int main ( int argc, char *argv[] )
   struct timeval t1, t2;
   struct timezone tz;
   float deltatime;
-  while(Input());return 0;
+  while(Input()){
+    sleep(1);
+  }return 0;
   while(Input()){
     std::cout<<"loop"<<std::endl;
     gettimeofday ( &t1 , &tz );
