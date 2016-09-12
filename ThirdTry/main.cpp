@@ -31,7 +31,7 @@ bool Input ( void )
   int rd;
 
   bool ret = true;
-  if(timeout++ > 180)return false;
+  if(timeout++ > 20)return false;
 
   // Set up the devices on the first call
   if(first)
@@ -160,7 +160,7 @@ bool Input ( void )
     // Read events from keyboard
 
     rd = read(keyboardFd,ev,sizeof(ev));
-    std::cout<<"read"<<std::endl;
+    std::cout<<"read "<<rd<<std::endl;
     if(rd > 0)
     {
       int count,n;
