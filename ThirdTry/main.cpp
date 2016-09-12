@@ -439,7 +439,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
       while(buf[pos] != '!')
       {
         std::cout<<"Getting Object"<<std::endl;
-        int totalNeeded = sizeof(unsigned int) + (sizeof(float) * 6) + 2;
+        int totalNeeded = sizeof(unsigned int) + (sizeof(float) * 6);
         if(pos + totalNeeded > len || pos + totalNeeded > 1023)
         {
           std::cout<<"Object goes too far"<<pos<<"+"<<totalNeeded<<">"<<len<<std::endl;
