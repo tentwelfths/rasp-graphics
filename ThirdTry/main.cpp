@@ -521,7 +521,7 @@ int main ( int argc, char *argv[] )
   while(!Input()){
     sleep(1);
   }return 0;
-  while(Input()){
+  /*while(Input()){
     std::cout<<"loop"<<std::endl;
     gettimeofday ( &t1 , &tz );
     //if()break;
@@ -573,5 +573,5 @@ int main ( int argc, char *argv[] )
       deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
     }while(deltatime > 1.0f/30.0f);
   }
-  return 0;
+  return 0;*/
 }
