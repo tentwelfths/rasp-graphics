@@ -76,7 +76,7 @@ bool Input ( void )
             keyboardFd = open(fullPath,O_RDONLY | O_NONBLOCK);
             printf("%s Fd = %d\n",fullPath,keyboardFd);
             printf("Getting exclusive access: ");
-            result = ioctl(keyboardFd, EVIOCGRAB, 1);
+            //result = ioctl(keyboardFd, EVIOCGRAB, 1);
             printf("%s\n", (result == 0) ? "SUCCESS" : "FAILURE");
 
         }
