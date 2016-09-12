@@ -227,13 +227,16 @@ oldData old;
 
 void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
 {
+  std::cout<<"Processing response"<<std::endl;
   for(; pos < len;)
   {
     if(buf[pos] == '~')//client number
     {
+      std::cout<<"Getting client number"<<std::endl;
       int totalNeeded = 3;
       if(pos + totalNeeded >= len || pos + totalNeeded > 1023)
       {
+        std::cout<<"Client number goes too far"<<pos<<"+"<<totalNeeded<<">="<<len<<std::endl;
         old.size = len - pos;
         for(int i = 0; pos<len; ++pos, ++i)
         {
@@ -247,9 +250,11 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
     }
     else if(buf[pos] == '!') //object
     {
+      std::cout<<"Getting Object"<<std::endl;
       int totalNeeded = sizeof(unsigned int) + (sizeof(float) * 6) + 2;
       if(pos + totalNeeded >= len || pos + totalNeeded > 1023)
       {
+        std::cout<<"Object goes too far"<<pos<<"+"<<totalNeeded<<">="<<len<<std::endl;
         old.size = len - pos;
         for(int i = 0; pos<len; ++pos, ++i)
         {
