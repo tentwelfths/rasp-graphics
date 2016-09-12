@@ -255,15 +255,16 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
       const float rot  = *reinterpret_cast<const float*>(&(buf[pos]));
       std::cout<<pos<<"~"<<len <<" rot: "<< rot <<std::endl;
       pos += sizeof(float);
-      gObjects[textureID][count[textureID]].position[0] = xPos;
-      gObjects[textureID][count[textureID]].position[1] = yPos;
-      gObjects[textureID][count[textureID]].position[2] = zPos;
-      gObjects[textureID][count[textureID]].scale[0] = xSca;
-      gObjects[textureID][count[textureID]].scale[1] = ySca;
-      gObjects[textureID][count[textureID]].rotation[2] = rot;
-      gObjects[textureID][count[textureID]].textureID = textureID;
-      gObjects[textureID][count[textureID]].inUse = true;
-      count[textureID]++;
+      
+      //gObjects[textureID][count[textureID]].position[0] = xPos;
+      //gObjects[textureID][count[textureID]].position[1] = yPos;
+      //gObjects[textureID][count[textureID]].position[2] = zPos;
+      //gObjects[textureID][count[textureID]].scale[0] = xSca;
+      //gObjects[textureID][count[textureID]].scale[1] = ySca;
+      //gObjects[textureID][count[textureID]].rotation[2] = rot;
+      //gObjects[textureID][count[textureID]].textureID = textureID;
+      //gObjects[textureID][count[textureID]].inUse = true;
+      //count[textureID]++;
       ++pos;
     }
     else if(buf[pos] == '@')//audio cue
