@@ -234,18 +234,25 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
     {
       std::cout<<"Response found an object!!!!"<<std::endl;
       const unsigned int textureID = *reinterpret_cast<const unsigned int*>(&(buf[pos]));
+      std::cout<<textureID<<std::endl;
       pos += sizeof(unsigned int);
       const float xPos = *reinterpret_cast<const float*>(&(buf[pos]));
+      std::cout<<xPos<<std::endl;
       pos += sizeof(float);
       const float yPos = *reinterpret_cast<const float*>(&(buf[pos]));
+      std::cout<<yPos<<std::endl;
       pos += sizeof(float);
       const float zPos = *reinterpret_cast<const float*>(&(buf[pos]));
+      std::cout<<zPos<<std::endl;
       pos += sizeof(float);
       const float xSca = *reinterpret_cast<const float*>(&(buf[pos]));
+      std::cout<<xSca<<std::endl;
       pos += sizeof(float);
       const float ySca = *reinterpret_cast<const float*>(&(buf[pos]));
+      std::cout<<ySca<<std::endl;
       pos += sizeof(float);
       const float rot  = *reinterpret_cast<const float*>(&(buf[pos]));
+      std::cout<<rot<<std::endl;
       pos += sizeof(float);
       gObjects[textureID][count[textureID]].position[0] = xPos;
       gObjects[textureID][count[textureID]].position[1] = yPos;
