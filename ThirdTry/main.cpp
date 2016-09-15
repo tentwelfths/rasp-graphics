@@ -103,7 +103,7 @@ bool Input ( void )
 
     
     first = 0;
-    if((keyboardFd == -1) || (mouseFd == -1)) return false;
+    if((keyboardFd == -1)) return false;
 
   }
 
