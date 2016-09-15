@@ -81,17 +81,17 @@ bool Input ( void )
             printf("%s\n", (result == 0) ? "SUCCESS" : "FAILURE");
 
         }
-        if(regexec (&mouse, dp->d_name, 0, NULL, 0) == 0)
-        {
-            printf("match for the kbd = %s\n",dp->d_name);
-            sprintf(fullPath,"%s/%s",dirName,dp->d_name);
-            mouseFd = open(fullPath,O_RDONLY | O_NONBLOCK);
-            printf("%s Fd = %d\n",fullPath,mouseFd);
-            printf("Getting exclusive access: ");
-            result = ioctl(mouseFd, EVIOCGRAB, 1);
-            printf("%s\n", (result == 0) ? "SUCCESS" : "FAILURE");
-
-        }
+        //if(regexec (&mouse, dp->d_name, 0, NULL, 0) == 0)
+        //{
+        //    printf("match for the kbd = %s\n",dp->d_name);
+        //    sprintf(fullPath,"%s/%s",dirName,dp->d_name);
+        //    mouseFd = open(fullPath,O_RDONLY | O_NONBLOCK);
+        //    printf("%s Fd = %d\n",fullPath,mouseFd);
+        //    printf("Getting exclusive access: ");
+        //    //result = ioctl(mouseFd, EVIOCGRAB, 1);
+        //    printf("%s\n", (result == 0) ? "SUCCESS" : "FAILURE");
+        //
+        //}
       }
     } while (dp != NULL);
     std::cout<<"...."<<std::endl;
@@ -110,53 +110,53 @@ bool Input ( void )
     
     // Read events from mouse
 
-    rd = read(mouseFd,ev,sizeof(ev));
-    if(rd > 0)
-    {
-      int count,n;
-      struct input_event *evp;
-
-      count = rd / sizeof(struct input_event);
-      n = 0;
-      while(count--)
-      {
-        evp = &ev[n++];
-        if(evp->type == 1)
-        {
-
-          if(evp->code == BTN_LEFT)  
-          {
-              if(evp->value == 1)   // Press
-              {
-                printf("Left button pressed\n");
-
-              }
-              else
-              {
-                printf("Left button released\n");
-              }
-          }
-        }
-  
-        if(evp->type == 2)
-        {
-
-          if(evp->code == 0)
-          {
-              // Mouse Left/Right
-
-              printf("Mouse moved left/right %d\n",evp->value);
-          }
-      
-          if(evp->code == 1)
-          {
-              // Mouse Up/Down
-              printf("Mouse moved up/down %d\n",evp->value);
-              
-          }
-        }
-      }
-    }
+    //rd = read(mouseFd,ev,sizeof(ev));
+    //if(rd > 0)
+    //{
+    //  int count,n;
+    //  struct input_event *evp;
+    //
+    //  count = rd / sizeof(struct input_event);
+    //  n = 0;
+    //  while(count--)
+    //  {
+    //    evp = &ev[n++];
+    //    if(evp->type == 1)
+    //    {
+    //
+    //      if(evp->code == BTN_LEFT)  
+    //      {
+    //          if(evp->value == 1)   // Press
+    //          {
+    //            printf("Left button pressed\n");
+    //
+    //          }
+    //          else
+    //          {
+    //            printf("Left button released\n");
+    //          }
+    //      }
+    //    }
+    //
+    //    if(evp->type == 2)
+    //    {
+    //
+    //      if(evp->code == 0)
+    //      {
+    //          // Mouse Left/Right
+    //
+    //          printf("Mouse moved left/right %d\n",evp->value);
+    //      }
+    //  
+    //      if(evp->code == 1)
+    //      {
+    //          // Mouse Up/Down
+    //          printf("Mouse moved up/down %d\n",evp->value);
+    //          
+    //      }
+    //    }
+    //  }
+    //}
 
     // Read events from keyboard
 
