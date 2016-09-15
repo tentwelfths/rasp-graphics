@@ -45,9 +45,9 @@ int NetworkingSystem::Receive(char * buffer, int len)
   {
     int b = recvfrom(sockfd, buffer, len, 0, (&addr), &fromlen);
     if(b <= 0)return b;
-    if (serv_addr.addr.sa_family == addr.sa_family)
+    if (serv_addr.sin_family == addr.sin_family)
     {
-      if (((sockaddr_in*)&serv_addr.addr)->sin_addr.s_addr == ((sockaddr_in*)&addr)->sin_addr.s_addr)
+      if (((sockaddr_in*)&serv_addr)->sin_addr.s_addr == ((sockaddr_in*)&addr)->sin_addr.s_addr)
       {
         return b;
       }
