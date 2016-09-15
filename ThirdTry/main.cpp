@@ -563,7 +563,9 @@ int main ( int argc, char *argv[] )
   
   GraphicsSystem g;
   NetworkingSystem n(27015, "192.168.77.106");
-  n.Send("HELLO!", strlen("HELLO!"));
+  int res = n.Send("HELLO!", strlen("HELLO!"));
+  std::cout<<res<<std::endl;
+  return;
   g.LoadPngToTexture("Kakka_Carrot_Veggie.png");
   //Object a;
   //a.position[0] = 0;
