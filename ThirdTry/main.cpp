@@ -161,7 +161,7 @@ bool Input ( void )
     // Read events from keyboard
 
     rd = read(keyboardFd,ev,sizeof(ev));
-    std::cout<<"read "<<rd<<std::endl;
+    //std::cout<<"read "<<rd<<std::endl;
     if(rd > 0)
     {
       int count,n;
