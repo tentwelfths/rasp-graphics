@@ -403,75 +403,55 @@ void GetClientNumber(int & pos, int & clientNumber, const char * buf)
   }
 }
 
-struct oldData
-{
-  int size;
-  char buf[1023];
-};
-oldData old;
+std::queue<std::string> commands;
+std::string unfinished = "";
 
 void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
 {
-  std::cout<<"Processing response"<<std::endl;
-  for(; pos < len;)
+  for (int i = 0; i < iResult; ++i)
   {
-    if(buf[pos] == '~')//client number
-    {
-      std::cout<<"Getting client number"<<std::endl;
-      int totalNeeded = 3;
-      if(pos + totalNeeded > len || pos + totalNeeded > 1023)
-      {
-        std::cout<<"Client number goes too far"<<pos<<"+"<<totalNeeded<<">"<<len<<std::endl;
-        old.size = len - pos;
-        for(int i = 0; pos<len; ++pos, ++i)
-        {
-          old.buf[i] = buf[pos];
-        }
-        return;
-      }
-      GetClientNumber(pos,clientNumber,buf);
-      std::cout<<"Client NUmber is " <<clientNumber<<std::endl;
-      ++pos;
+    if (buf[i] == '~'){
+      commands.push(unfinished);
+      unfinished = "";
     }
-    else if(buf[pos] == '!') //objects beginning
+    else
     {
-      ++pos;
-      while(buf[pos] != '!')
+      unfinished += buf[i];
+    }
+  }
+  while (!commands.empty())
+  {
+    std::string command = commands.front(); commands.pop();
+    if (command[0] == '`')//objects
+    {
+      int pos = 1;
+      unsigned short frame = *static_cast<const unsigned short *>(static_cast<const void *>(&(command.c_str()[pos])));
+      pos += sizeof(unsigned short);
+      if(frame < lastFrameSeen && (frame > 50 || lastFrameSeen < (unsigned short)(-1) - 50)) break;
+      while(command[pos] != '!')
       {
         std::cout<<"Getting Object"<<std::endl;
-        int totalNeeded = sizeof(unsigned int) + (sizeof(float) * 6);
-        if(pos + totalNeeded > len || pos + totalNeeded > 1023)
-        {
-          std::cout<<"Object goes too far"<<pos<<"+"<<totalNeeded<<">"<<len<<std::endl;
-          old.size = len - pos;
-          for(int i = 0; pos<len; ++pos, ++i)
-          {
-            old.buf[i] = buf[pos];
-          }
-          return;
-        }
-        old.size = 0;
         std::cout<<"Response found an object!!!!"<<std::endl;
-        const unsigned int textureID = *reinterpret_cast<const unsigned int*>(&(buf[pos]));
+        const unsigned int textureID = *reinterpret_cast<const unsigned int*>(&(command[pos]));
         std::cout<<"Object with textID "<<textureID<<" #"<<count[textureID]<<std::endl;
         //std::cout<<pos<<"-"<<len <<" TextureID: "<< textureID <<std::endl;
         pos += sizeof(unsigned int);
-        const float xPos = *reinterpret_cast<const float*>(&(buf[pos]));
+        const float xPos = *reinterpret_cast<const float*>(&(command[pos]));
         //std::cout<<pos<<"+"<<len <<" xPos: "<< xPos <<std::endl;
         pos += sizeof(float);
-        const float yPos = *reinterpret_cast<const float*>(&(buf[pos]));
+        const float yPos = *reinterpret_cast<const float*>(&(command[pos]));
         std::cout<<pos<<"="<<len <<" yPos: "<< yPos <<std::endl;
         pos += sizeof(float);
-        const float zPos = *reinterpret_cast<const float*>(&(buf[pos]));
+        const float zPos = *reinterpret_cast<const float*>(&(command[pos]));
         //std::cout<<pos<<"]"<<len <<" zPos: "<< zPos <<std::endl;
         pos += sizeof(float);
-        const float xSca = *reinterpret_cast<const float*>(&(buf[pos]));
+        const float xSca = *reinterpret_cast<const float*>(&(command[pos]));
         //std::cout<<pos<<"["<<len <<" xSca: "<< xSca <<std::endl;
         pos += sizeof(float);
-        const float ySca = *reinterpret_cast<const float*>(&(buf[pos]));
+        const float ySca = *reinterpret_cast<const float*>(&(command[pos]));
         //std::cout<<pos<<"*"<<len <<" ySca: "<< ySca <<std::endl;
         pos += sizeof(float);
-        const float rot  = *reinterpret_cast<const float*>(&(buf[pos]));
+        const float rot  = *reinterpret_cast<const float*>(&(command[pos]));
         //std::cout<<pos<<"~"<<len <<" rot: "<< rot <<std::endl;
         pos += sizeof(float);
         
@@ -484,19 +464,95 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
         gObjects[textureID][count[textureID]].textureID = textureID;
         gObjects[textureID][count[textureID]].inUse = true;
         count[textureID]++;
-      }
-      ++pos;
     }
-    else if(buf[pos] == '@')//audio cue
-    {
-      //???????????????????????????
-      ++pos;
-    }
-    else{ //the fuck?
-      ++pos;
-    }
-    
   }
+  
+  
+  //std::cout<<"Processing response"<<std::endl;
+  //for(; pos < len;)
+  //{
+  //  if(buf[pos] == '~')//client number
+  //  {
+  //    std::cout<<"Getting client number"<<std::endl;
+  //    int totalNeeded = 3;
+  //    if(pos + totalNeeded > len || pos + totalNeeded > 1023)
+  //    {
+  //      std::cout<<"Client number goes too far"<<pos<<"+"<<totalNeeded<<">"<<len<<std::endl;
+  //      old.size = len - pos;
+  //      for(int i = 0; pos<len; ++pos, ++i)
+  //      {
+  //        old.buf[i] = buf[pos];
+  //      }
+  //      return;
+  //    }
+  //    GetClientNumber(pos,clientNumber,buf);
+  //    std::cout<<"Client NUmber is " <<clientNumber<<std::endl;
+  //    ++pos;
+  //  }
+  //  else if(buf[pos] == '!') //objects beginning
+  //  {
+  //    ++pos;
+  //    while(buf[pos] != '!')
+  //    {
+  //      std::cout<<"Getting Object"<<std::endl;
+  //      int totalNeeded = sizeof(unsigned int) + (sizeof(float) * 6);
+  //      if(pos + totalNeeded > len || pos + totalNeeded > 1023)
+  //      {
+  //        std::cout<<"Object goes too far"<<pos<<"+"<<totalNeeded<<">"<<len<<std::endl;
+  //        old.size = len - pos;
+  //        for(int i = 0; pos<len; ++pos, ++i)
+  //        {
+  //          old.buf[i] = buf[pos];
+  //        }
+  //        return;
+  //      }
+  //      old.size = 0;
+  //      std::cout<<"Response found an object!!!!"<<std::endl;
+  //      const unsigned int textureID = *reinterpret_cast<const unsigned int*>(&(buf[pos]));
+  //      std::cout<<"Object with textID "<<textureID<<" #"<<count[textureID]<<std::endl;
+  //      //std::cout<<pos<<"-"<<len <<" TextureID: "<< textureID <<std::endl;
+  //      pos += sizeof(unsigned int);
+  //      const float xPos = *reinterpret_cast<const float*>(&(buf[pos]));
+  //      //std::cout<<pos<<"+"<<len <<" xPos: "<< xPos <<std::endl;
+  //      pos += sizeof(float);
+  //      const float yPos = *reinterpret_cast<const float*>(&(buf[pos]));
+  //      std::cout<<pos<<"="<<len <<" yPos: "<< yPos <<std::endl;
+  //      pos += sizeof(float);
+  //      const float zPos = *reinterpret_cast<const float*>(&(buf[pos]));
+  //      //std::cout<<pos<<"]"<<len <<" zPos: "<< zPos <<std::endl;
+  //      pos += sizeof(float);
+  //      const float xSca = *reinterpret_cast<const float*>(&(buf[pos]));
+  //      //std::cout<<pos<<"["<<len <<" xSca: "<< xSca <<std::endl;
+  //      pos += sizeof(float);
+  //      const float ySca = *reinterpret_cast<const float*>(&(buf[pos]));
+  //      //std::cout<<pos<<"*"<<len <<" ySca: "<< ySca <<std::endl;
+  //      pos += sizeof(float);
+  //      const float rot  = *reinterpret_cast<const float*>(&(buf[pos]));
+  //      //std::cout<<pos<<"~"<<len <<" rot: "<< rot <<std::endl;
+  //      pos += sizeof(float);
+  //      
+  //      gObjects[textureID][count[textureID]].position[0] = xPos;
+  //      gObjects[textureID][count[textureID]].position[1] = yPos;
+  //      gObjects[textureID][count[textureID]].position[2] = zPos;
+  //      gObjects[textureID][count[textureID]].scale[0] = xSca;
+  //      gObjects[textureID][count[textureID]].scale[1] = ySca;
+  //      gObjects[textureID][count[textureID]].rotation[2] = rot;
+  //      gObjects[textureID][count[textureID]].textureID = textureID;
+  //      gObjects[textureID][count[textureID]].inUse = true;
+  //      count[textureID]++;
+  //    }
+  //    ++pos;
+  //  }
+  //  else if(buf[pos] == '@')//audio cue
+  //  {
+  //    //???????????????????????????
+  //    ++pos;
+  //  }
+  //  else{ //the fuck?
+  //    ++pos;
+  //  }
+  //  
+  //}
 }
 
 
@@ -505,6 +561,7 @@ int main ( int argc, char *argv[] )
   
   GraphicsSystem g;
   NetworkingSystem n(27015, "192.168.77.106");
+  n.Send("HELLO!", strlen("HELLO!"));
   g.LoadPngToTexture("Kakka_Carrot_Veggie.png");
   //Object a;
   //a.position[0] = 0;
@@ -529,18 +586,12 @@ int main ( int argc, char *argv[] )
     do{
       memset((void*)buf, 0, 1024);
       std::cout<<"Tryna recv"<<std::endl;
-      netResult = n.Receive((buf + old.size),1023 - old.size);
+      netResult = n.Receive((buf),1023);
       
       std::cout<<"netResult: "<<netResult<<std::endl;
       pos = 0;
       if(netResult > 0)
       {
-        std::cout<<"Old size: "<<old.size<<std::endl;
-        for(int i = 0; i < old.size; ++i)
-        {
-          std::cout<<"old to new "<<i<<" -- "<<old.size<<std::endl;
-          buf[i] = old.buf[i];
-        }
         for(int i = 0; i < 50 && !updated; ++i)
         {
           gObjects[i][0].inUse = false;
@@ -549,7 +600,6 @@ int main ( int argc, char *argv[] )
         updated = true;
         ProcessResponse(pos, clientNumber, buf, netResult + old.size);
         
-        old.size = 0;
         for(int i = 0; i < 50; ++i)
         {
           if(count[i] < 50)
@@ -560,6 +610,7 @@ int main ( int argc, char *argv[] )
     g.Draw();
     toSend = !toSend;
     if(toSend){
+      inputstream = "~" + inputstream + "!";
       std::vector<char> v(inputstream.length() + 1);
       std::strcpy(&v[0], inputstream.c_str());
       char* pc = &v[0];
