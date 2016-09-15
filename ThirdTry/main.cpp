@@ -76,9 +76,9 @@ bool Input ( void )
             sprintf(fullPath,"%s/%s",dirName,dp->d_name);
             keyboardFd = open(fullPath,O_RDONLY | O_NONBLOCK);
             printf("%s Fd = %d\n",fullPath,keyboardFd);
-            printf("Getting exclusive access: ");
-            result = ioctl(keyboardFd, EVIOCGRAB, 1);
-            printf("%s\n", (result == 0) ? "SUCCESS" : "FAILURE");
+            //printf("Getting exclusive access: ");
+            //result = ioctl(keyboardFd, EVIOCGRAB, 1);
+            //printf("%s\n", (result == 0) ? "SUCCESS" : "FAILURE");
 
         }
         //if(regexec (&mouse, dp->d_name, 0, NULL, 0) == 0)
