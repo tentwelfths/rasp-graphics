@@ -43,11 +43,11 @@ int NetworkingSystem::Send(const char * buffer, int len)
 }
 int NetworkingSystem::Receive(char * buffer, int len)
 {
-  sockaddr addr;
-  unsigned int fromlen;
+  sockaddr_in addr;
+  unsigned int fromlen = sizeof(sockaddr_in);
   while(true)
   {
-    int b = recvfrom(sockfd, buffer, len, 0, (&addr), &fromlen);
+    int b = recvfrom(sockfd, buffer, len, 0, (sockaddr*)(&addr), &fromlen);
     if(b <= 0)return b;
     if (serv_addr.sin_family == addr.sa_family)
     {
