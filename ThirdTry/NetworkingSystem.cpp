@@ -40,7 +40,7 @@ int NetworkingSystem::Send(const char * buffer, int len)
 int NetworkingSystem::Receive(char * buffer, int len)
 {
   sockaddr addr;
-  int fromlen;
+  unsigned int fromlen;
   while(true)
   {
     int b = recvfrom(sockfd, buffer, len, 0, (&addr), &fromlen);

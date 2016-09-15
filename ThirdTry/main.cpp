@@ -15,6 +15,7 @@
 #include <iostream>
 #include <cstring>
 #include <memory>
+#include <queue>
 
 std::string inputstream = "";
 
@@ -405,6 +406,7 @@ void GetClientNumber(int & pos, int & clientNumber, const char * buf)
 
 std::queue<std::string> commands;
 std::string unfinished = "";
+unsigned short lastFrameSeen = 0;
 
 void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
 {
@@ -428,6 +430,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
       unsigned short frame = *static_cast<const unsigned short *>(static_cast<const void *>(&(command.c_str()[pos])));
       pos += sizeof(unsigned short);
       if(frame < lastFrameSeen && (frame > 50 || lastFrameSeen < (unsigned short)(-1) - 50)) break;
+      lastFrameSeen = frame;
       while(command[pos] != '!')
       {
         std::cout<<"Getting Object"<<std::endl;
@@ -464,9 +467,9 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
         gObjects[textureID][count[textureID]].textureID = textureID;
         gObjects[textureID][count[textureID]].inUse = true;
         count[textureID]++;
+      }
     }
   }
-  
   
   //std::cout<<"Processing response"<<std::endl;
   //for(; pos < len;)
@@ -554,7 +557,6 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
   //  
   //}
 }
-
 
 int main ( int argc, char *argv[] )
 {
