@@ -584,15 +584,15 @@ int main ( int argc, char *argv[] )
   struct timezone tz;
   float deltatime;
   while(Input()){
-    std::cout<<"loop"<<std::endl;
+    //std::cout<<"loop"<<std::endl;
     gettimeofday ( &t1 , &tz );
     bool updated = false;
     do{
       memset((void*)buf, 0, 1024);
-      std::cout<<"Tryna recv"<<std::endl;
+      //std::cout<<"Tryna recv"<<std::endl;
       netResult = n.Receive((buf),1023);
       
-      std::cout<<"netResult: "<<netResult<<std::endl;
+      //std::cout<<"netResult: "<<netResult<<std::endl;
       pos = 0;
       if(netResult > 0)
       {
@@ -618,7 +618,7 @@ int main ( int argc, char *argv[] )
       std::vector<char> v(inputstream.length() + 1);
       std::strcpy(&v[0], inputstream.c_str());
       char* pc = &v[0];
-      //std::cout<<inputstream<<std::endl;
+      std::cout<<inputstream<<std::endl;
       std::cout<<"Bytes sent: "<<n.Send(pc, inputstream.length())<<std::endl;
       inputstream = "";
     }
