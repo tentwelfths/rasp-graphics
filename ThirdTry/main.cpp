@@ -410,7 +410,7 @@ unsigned short lastFrameSeen = 0;
 
 void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
 {
-  for (int i = 0; i < iResult; ++i)
+  for (int i = 0; i < len; ++i)
   {
     if (buf[i] == '~'){
       commands.push(unfinished);
@@ -600,7 +600,7 @@ int main ( int argc, char *argv[] )
           count[i] = 0;
         }
         updated = true;
-        ProcessResponse(pos, clientNumber, buf, netResult + old.size);
+        ProcessResponse(pos, clientNumber, buf, netResult);
         
         for(int i = 0; i < 50; ++i)
         {

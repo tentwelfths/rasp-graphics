@@ -34,7 +34,7 @@ NetworkingSystem::NetworkingSystem(int port, const char * ip)
 
 int NetworkingSystem::Send(const char * buffer, int len)
 {
-  return sendto(sockfd, buffer, len, 0, &serv_addr, sizeof(serv_addr));
+  return sendto(sockfd, buffer, len, 0, (sockaddr*)&serv_addr, sizeof(serv_addr));
   //return write(sockfd,buffer,len);
 }
 int NetworkingSystem::Receive(char * buffer, int len)
@@ -45,7 +45,7 @@ int NetworkingSystem::Receive(char * buffer, int len)
   {
     int b = recvfrom(sockfd, buffer, len, 0, (&addr), &fromlen);
     if(b <= 0)return b;
-    if (serv_addr.sin_family == addr.sin_family)
+    if (serv_addr.sin_family == addr.sa_family)
     {
       if (((sockaddr_in*)&serv_addr)->sin_addr.s_addr == ((sockaddr_in*)&addr)->sin_addr.s_addr)
       {
