@@ -613,7 +613,7 @@ int main ( int argc, char *argv[] )
     }while(netResult > 0);
     g.Draw();
     toSend = !toSend;
-    if(toSend){
+    if(toSend && inputstream.length() > 0){
       inputstream = "~" + inputstream + "!";
       std::vector<char> v(inputstream.length() + 1);
       std::strcpy(&v[0], inputstream.c_str());
