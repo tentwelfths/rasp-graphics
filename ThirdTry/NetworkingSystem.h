@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -7,6 +8,7 @@
 #include <netinet/in.h>
 #include <netdb.h> 
 #include <sys/ioctl.h>
+#include <arpa/inet.h>
 
 class NetworkingSystem
 {
