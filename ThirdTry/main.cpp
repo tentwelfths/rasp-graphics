@@ -175,7 +175,7 @@ std::queue<std::string> commands;
 std::string unfinished = "";
 unsigned short lastFrameSeen = 0;
 
-void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
+void ProcessResponse(int& pos, int & clientNumber, const char * command, int len)
 {
   //for (int i = 0; i < len; ++i)
   //{
@@ -188,58 +188,53 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
   //    unfinished += buf[i];
   //  }
   //}
-  commands.push(buf);
-  while (!commands.empty())
+  if (command[0] == '`')//objects
   {
-    std::string command = commands.front(); commands.pop();
-    std::cout<<command<<std::endl;
-    if (command[0] == '`')//objects
+    int pos = 1;
+    unsigned short frame = *static_cast<const unsigned short *>(static_cast<const void *>(&(command[pos])));
+    pos += sizeof(unsigned short);
+    std::cout<<frame<<":"<<lastFrameSeen<<std::endl;
+    if(!(frame > lastFrameSeen || (frame < 50 && lastFrameSeen > (unsigned short)(-1) - 50))) break;
+    lastFrameSeen = frame;
+    while(pos < command.length())
     {
-      int pos = 1;
-      unsigned short frame = *static_cast<const unsigned short *>(static_cast<const void *>(&(command.c_str()[pos])));
-      pos += sizeof(unsigned short);
-      std::cout<<frame<<":"<<lastFrameSeen<<std::endl;
-      if(frame < lastFrameSeen && (frame > 50 || lastFrameSeen < (unsigned short)(-1) - 50)) break;
-      lastFrameSeen = frame;
-      while(pos < command.length())
-      {
-        std::cout<<"Getting Object"<<std::endl;
-        std::cout<<"Response found an object!!!!"<<std::endl;
-        const unsigned int textureID = *reinterpret_cast<const unsigned int*>(&(command[pos]));
-        std::cout<<"Object with textID "<<textureID<<" #"<<count[textureID]<<std::endl;
-        std::cout<<pos<<"-"<<len <<" TextureID: "<< textureID <<std::endl;
-        pos += sizeof(unsigned int);
-        const float xPos = *reinterpret_cast<const float*>(&(command[pos]));
-        std::cout<<pos<<"+"<<len <<" xPos: "<< xPos <<std::endl;
-        pos += sizeof(float);
-        const float yPos = *reinterpret_cast<const float*>(&(command[pos]));
-        std::cout<<pos<<"="<<len <<" yPos: "<< yPos <<std::endl;
-        pos += sizeof(float);
-        const float zPos = *reinterpret_cast<const float*>(&(command[pos]));
-        std::cout<<pos<<"]"<<len <<" zPos: "<< zPos <<std::endl;
-        pos += sizeof(float);
-        const float xSca = *reinterpret_cast<const float*>(&(command[pos]));
-        std::cout<<pos<<"["<<len <<" xSca: "<< xSca <<std::endl;
-        pos += sizeof(float);
-        const float ySca = *reinterpret_cast<const float*>(&(command[pos]));
-        std::cout<<pos<<"*"<<len <<" ySca: "<< ySca <<std::endl;
-        pos += sizeof(float);
-        const float rot  = *reinterpret_cast<const float*>(&(command[pos]));
-        std::cout<<pos<<"~"<<len <<" rot: "<< rot <<std::endl;
-        pos += sizeof(float);
-        
-        gObjects[textureID][count[textureID]].position[0] = xPos;
-        gObjects[textureID][count[textureID]].position[1] = yPos;
-        gObjects[textureID][count[textureID]].position[2] = zPos;
-        gObjects[textureID][count[textureID]].scale[0] = xSca;
-        gObjects[textureID][count[textureID]].scale[1] = ySca;
-        gObjects[textureID][count[textureID]].rotation[2] = rot;
-        gObjects[textureID][count[textureID]].textureID = textureID;
-        gObjects[textureID][count[textureID]].inUse = true;
-        count[textureID]++;
-      }
+      std::cout<<"Getting Object"<<std::endl;
+      std::cout<<"Response found an object!!!!"<<std::endl;
+      const unsigned int textureID = *reinterpret_cast<const unsigned int*>(&(command[pos]));
+      std::cout<<"Object with textID "<<textureID<<" #"<<count[textureID]<<std::endl;
+      std::cout<<pos<<"-"<<len <<" TextureID: "<< textureID <<std::endl;
+      pos += sizeof(unsigned int);
+      const float xPos = *reinterpret_cast<const float*>(&(command[pos]));
+      std::cout<<pos<<"+"<<len <<" xPos: "<< xPos <<std::endl;
+      pos += sizeof(float);
+      const float yPos = *reinterpret_cast<const float*>(&(command[pos]));
+      std::cout<<pos<<"="<<len <<" yPos: "<< yPos <<std::endl;
+      pos += sizeof(float);
+      const float zPos = *reinterpret_cast<const float*>(&(command[pos]));
+      std::cout<<pos<<"]"<<len <<" zPos: "<< zPos <<std::endl;
+      pos += sizeof(float);
+      const float xSca = *reinterpret_cast<const float*>(&(command[pos]));
+      std::cout<<pos<<"["<<len <<" xSca: "<< xSca <<std::endl;
+      pos += sizeof(float);
+      const float ySca = *reinterpret_cast<const float*>(&(command[pos]));
+      std::cout<<pos<<"*"<<len <<" ySca: "<< ySca <<std::endl;
+      pos += sizeof(float);
+      const float rot  = *reinterpret_cast<const float*>(&(command[pos]));
+      std::cout<<pos<<"~"<<len <<" rot: "<< rot <<std::endl;
+      pos += sizeof(float);
+      
+      gObjects[textureID][count[textureID]].position[0] = xPos;
+      gObjects[textureID][count[textureID]].position[1] = yPos;
+      gObjects[textureID][count[textureID]].position[2] = zPos;
+      gObjects[textureID][count[textureID]].scale[0] = xSca;
+      gObjects[textureID][count[textureID]].scale[1] = ySca;
+      gObjects[textureID][count[textureID]].rotation[2] = rot;
+      gObjects[textureID][count[textureID]].textureID = textureID;
+      gObjects[textureID][count[textureID]].inUse = true;
+      count[textureID]++;
     }
   }
+
   
   //std::cout<<"Processing response"<<std::endl;
   //for(; pos < len;)
