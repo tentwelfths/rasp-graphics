@@ -177,17 +177,17 @@ unsigned short lastFrameSeen = 0;
 
 void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
 {
-  for (int i = 0; i < len; ++i)
-  {
-    if (buf[i] == '!'){
-      commands.push(unfinished);
-      unfinished = "";
-    }
-    else
-    {
-      unfinished += buf[i];
-    }
-  }
+  //for (int i = 0; i < len; ++i)
+  //{
+  //  if (buf[i] == '!'){
+  //    commands.push(unfinished);
+  //    unfinished = "";
+  //  }
+  //  else
+  //  {
+  //    unfinished += buf[i];
+  //  }
+  //}
   while (!commands.empty())
   {
     std::string command = commands.front(); commands.pop();
