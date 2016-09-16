@@ -177,17 +177,18 @@ unsigned short lastFrameSeen = 0;
 
 void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
 {
-  for (int i = 0; i < len; ++i)
-  {
-    if (buf[i] == '!'){
-      commands.push(unfinished);
-      unfinished = "";
-    }
-    else
-    {
-      unfinished += buf[i];
-    }
-  }
+  //for (int i = 0; i < len; ++i)
+  //{
+  //  if (buf[i] == '!'){
+  //    commands.push(unfinished);
+  //    unfinished = "";
+  //  }
+  //  else
+  //  {
+  //    unfinished += buf[i];
+  //  }
+  //}
+  commands.push(buf);
   while (!commands.empty())
   {
     std::string command = commands.front(); commands.pop();
@@ -200,7 +201,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
       std::cout<<frame<<":"<<lastFrameSeen<<std::endl;
       if(frame < lastFrameSeen && (frame > 50 || lastFrameSeen < (unsigned short)(-1) - 50)) break;
       lastFrameSeen = frame;
-      while(command[pos] != '!')
+      while(pos < command.length())
       {
         std::cout<<"Getting Object"<<std::endl;
         std::cout<<"Response found an object!!!!"<<std::endl;
