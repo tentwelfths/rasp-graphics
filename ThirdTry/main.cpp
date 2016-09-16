@@ -179,7 +179,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
 {
   for (int i = 0; i < len; ++i)
   {
-    if (buf[i] == '~'){
+    if (buf[i] == '!'){
       commands.push(unfinished);
       unfinished = "";
     }
@@ -196,6 +196,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
       int pos = 1;
       unsigned short frame = *static_cast<const unsigned short *>(static_cast<const void *>(&(command.c_str()[pos])));
       pos += sizeof(unsigned short);
+      std::cout<<frame<<":"<<lastFrameSeen<<std::endl;
       if(frame < lastFrameSeen && (frame > 50 || lastFrameSeen < (unsigned short)(-1) - 50)) break;
       lastFrameSeen = frame;
       while(command[pos] != '!')
