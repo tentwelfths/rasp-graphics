@@ -188,6 +188,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * buf, int len)
   //    unfinished += buf[i];
   //  }
   //}
+  commands.push(buf);
   while (!commands.empty())
   {
     std::string command = commands.front(); commands.pop();
