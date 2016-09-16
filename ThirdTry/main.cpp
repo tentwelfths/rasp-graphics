@@ -196,7 +196,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
     std::cout<<frame<<":"<<lastFrameSeen<<std::endl;
     if(!(frame > lastFrameSeen || (frame < 50 && lastFrameSeen > (unsigned short)(-1) - 50))) break;
     lastFrameSeen = frame;
-    while(pos < command.length())
+    while(pos < len)
     {
       std::cout<<"Getting Object"<<std::endl;
       std::cout<<"Response found an object!!!!"<<std::endl;
