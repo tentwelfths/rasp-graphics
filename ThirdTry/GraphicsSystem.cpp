@@ -250,7 +250,7 @@ void GraphicsSystem::Draw()
    
   for(int i = 0; i < 50; ++i)
   {
-    if(gObjects[i][0].inUse == false)continue;
+    //if(gObjects[i][0].inUse == false)continue;
     glBindTexture ( GL_TEXTURE_2D, i );  
        // Bind the texture
     glActiveTexture ( GL_TEXTURE0 );
@@ -260,7 +260,7 @@ void GraphicsSystem::Draw()
     for(auto & iter = gObjects[i].begin(); iter != gObjects[i].end(); ++iter)
     {
       //std::cout<<"Drawing object #"<<j<<std::endl;
-      if(gObjects[i][j].inUse == false)continue;
+      if(iter->second->inUse == false)continue;
       glm::mat4 Position,Scale, Rotation;
       
       Position[3][0] = iter->second->position[0];
