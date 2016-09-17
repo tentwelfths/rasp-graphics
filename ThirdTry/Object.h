@@ -12,4 +12,4 @@ class Object
   bool inUse;
 };
 
-std::unordered_map<unsigned int, Object*> gObjects[50];
+extern std::unordered_map<unsigned int, Object*> gObjects[50];
