@@ -257,23 +257,23 @@ void GraphicsSystem::Draw()
 
     // Set the sampler texture unit to 0
     glUniform1i ( Texture, 0 );
-    for(int j = 0; j < 50; ++j)
+    for(auto & iter = gObjects[i].begin(); iter != gObjects[i].end(); ++iter)
     {
       std::cout<<"Drawing object #"<<j<<std::endl;
-      if(gObjects[i][j].inUse == false)break;
+      if(gObjects[i][j].inUse == false)continue;
       glm::mat4 Position,Scale, Rotation;
       
-      Position[3][0] = gObjects[i][j].position[0];
-      Position[3][1] = gObjects[i][j].position[1];
-      Position[3][2] = gObjects[i][j].position[2];
+      Position[3][0] = iter.second->position[0];
+      Position[3][1] = iter.second->position[1];
+      Position[3][2] = iter.second->position[2];
 
-      Scale[0][0] = gObjects[i][j].scale[0];
-      Scale[1][1] = gObjects[i][j].scale[1];
-      Scale[2][2] = gObjects[i][j].scale[2];
+      Scale[0][0] = iter.second->scale[0];
+      Scale[1][1] = iter.second->scale[1];
+      Scale[2][2] = iter.second->scale[2];
       //Scale[1][1] = x * 1.5;
-      Rotation = setUpRotationMatrix(Rotation, gObjects[i][j].rotation[0], 1, 0, 0);
-      Rotation = setUpRotationMatrix(Rotation, gObjects[i][j].rotation[1], 0, 1, 0);
-      Rotation = setUpRotationMatrix(Rotation, gObjects[i][j].rotation[2], 0, 0, 1);
+      Rotation = setUpRotationMatrix(Rotation, iter.second->rotation[0], 1, 0, 0);
+      Rotation = setUpRotationMatrix(Rotation, iter.second->rotation[1], 0, 1, 0);
+      Rotation = setUpRotationMatrix(Rotation, iter.second->rotation[2], 0, 0, 1);
       
       glUniformMatrix4fv(Position_worldspace, 1, GL_FALSE, &Position[0][0]);
       glUniformMatrix4fv(Scale_, 1, GL_FALSE, &Scale[0][0]);
