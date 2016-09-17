@@ -202,7 +202,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
       
       if(gObjects[textureID].find(objectID) == gObjects[textureID].end())
       {
-        gObjects[textureID].insert({objectID, new Object());
+        gObjects[textureID].insert({objectID, new Object()});
       }
       Object * temp = gObjects[textureID][objectID];
       temp->position[0] = xPos;

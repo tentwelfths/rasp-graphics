@@ -1,4 +1,6 @@
 #pragma once
+#include <unordered_map>
+
 class Object
 {
   public:
@@ -10,4 +12,4 @@ class Object
   bool inUse;
 };
 
-extern Object gObjects[50][50];
+std::unordered_map<unsigned int, Object*> gObjects[50];
