@@ -266,7 +266,7 @@ int main ( int argc, char *argv[] )
       
       inputstream = "~" + inputstream + "!";
       std::vector<char> v(inputstream.length() + 1);
-      std::strcpy(&v[0], inputstream.c_str());
+      for(unsigned i = 0; i < inputstream.length; ++i)v[i] = inputstream[i];
       char* pc = &v[0];
       std::cout<<inputstream<<std::endl;
       std::cout<<"Bytes sent: "<<n.Send(pc, inputstream.length())<<std::endl;
