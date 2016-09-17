@@ -114,12 +114,14 @@ bool Input ( void )
         {
           if(evp->value == 0)
           {
-            inputstream += (unsigned char)(evp->code);
+            for(unsigned i = 0; i < sizeof(decltype(evp->code)); ++i)
+              inputstream += ((unsigned char *)(&evp->code))[i];
             inputstream += '0';
           }
           else if(evp->value == 1)
           {
-            inputstream += (unsigned char)(evp->code);
+            for(unsigned i = 0; i < sizeof(decltype(evp->code)); ++i)
+              inputstream += ((unsigned char *)(&evp->code))[i];
             inputstream += '1';
           }
           std::cout<<evp->code<<" --- "<<evp->value<<std::endl;
