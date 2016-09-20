@@ -1,7 +1,7 @@
 #include "MCP3008SPI.h"
 using namespace std;
 
-int mcp3008Spi::GetChannelData(int a2dChannel)
+unsigned short mcp3008Spi::GetChannelData(int a2dChannel)
 {
   int a2dVal = 0;
   unsigned char data[3];
@@ -14,6 +14,7 @@ int mcp3008Spi::GetChannelData(int a2dChannel)
   a2dVal = 0;
           a2dVal = (data[1]<< 8) & 0b1100000000; //merge data[1] & data[2] to get result
           a2dVal |=  (data[2] & 0xff);
+  return (unsigned short)(a2dVal);
   ////sleep(1);
   //std::cout << "The Result is: " << a2dVal << std::endl;
 }

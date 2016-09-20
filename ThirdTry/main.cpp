@@ -170,6 +170,10 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
   //    unfinished += buf[i];
   //  }
   //}
+  if (command[0] == '@')//clientNumber
+  {
+    clientNumber = (int)((unsigned char)command[1]);
+  } 
   if (command[0] == '`')//objects
   {
     int pos = 1;
@@ -227,33 +231,10 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
 int main ( int argc, char *argv[] )
 {
   mcp3008Spi a2d("/dev/spidev0.0", SPI_MODE_0, 1000000, 8);
-    int i = 20;
-        int a2dVal = 0;
-    //int a2dChannel = 0;
-        unsigned char data[3];
- 
-    while(i > 0)
-    {
-        //data[0] = 1;  //  first byte transmitted -> start bit
-        //data[1] = 0b10000000 |( (((i%2) & 7) << 4)); // second byte transmitted -> (SGL/DIF = 1, D2=D1=D0=0)
-        //data[2] = 0; // third byte transmitted....don't care
-        //
-        //a2d.spiWriteRead(data, sizeof(data) );
-        //
-        //a2dVal = 0;
-        //        a2dVal = (data[1]<< 8) & 0b1100000000; //merge data[1] & data[2] to get result
-        //        a2dVal |=  (data[2] & 0xff);
-        ////sleep(1);
-        //std::cout << "The Result is: " << a2dVal << std::endl;
-        //i++;
-        std::cout<<"The result for 0 is"<< a2d.GetChannelData(0)<<std::endl;
-        std::cout<<"The result for 1 is"<< a2d.GetChannelData(1)<<std::endl;
-        std::cout<<"The result for 2 is"<< a2d.GetChannelData(2)<<std::endl;
-    }
-    return 0;
+  
   GraphicsSystem g;
   NetworkingSystem n(27015, "192.168.77.106");
-  int res = n.Send("HELLO!", strlen("HELLO!"));
+  int res = n.Send("HELLO", strlen("HELLO"));
   //std::cout<<res<<std::endl;
   //return 0;
   g.LoadPngToTexture("Kakka_Carrot_Veggie.png");
@@ -291,9 +272,17 @@ int main ( int argc, char *argv[] )
     }while(netResult > 0);
     g.Draw();
     toSend = !toSend;
+    inputstream = "~";
+    for(unsigned i = 0; i < sizeof(unsigned short); ++i){
+      inputstream += static_cast<char *>(static_cast<void *>(a2d.GetChannelData(0)))[i];
+    }
+    for(unsigned i = 0; i < sizeof(unsigned short); ++i){
+      inputstream += static_cast<char *>(static_cast<void *>(a2d.GetChannelData(1)))[i];
+    }
+    inputstream += (a2d.GetChannelData(2) > 15) ? '0' : '1';
     if(toSend && inputstream.length() > 0){
       
-      inputstream = "~" + inputstream + "!";
+      //inputstream = "~" + inputstream + "!";
       std::vector<char> v(inputstream.length() + 1);
       for(unsigned i = 0; i < inputstream.length(); ++i)v[i] = inputstream[i];
       char* pc = &v[0];
