@@ -9,7 +9,7 @@ int mcp3008Spi::GetChannelData(int a2dChannel)
   data[1] = 0b10000000 |( ((a2dChannel & 7) << 4)); // second byte transmitted -> (SGL/DIF = 1, D2=D1=D0=0)
   data[2] = 0; // third byte transmitted....don't care
   
-  a2d.spiWriteRead(data, sizeof(data) );
+  this->spiWriteRead(data, sizeof(data) );
   
   a2dVal = 0;
           a2dVal = (data[1]<< 8) & 0b1100000000; //merge data[1] & data[2] to get result
