@@ -136,7 +136,7 @@ bool Input ( void )
     }
     
     std::cout<<a2d.GetChannelData(1)<<std::endl;
-    std::cout<<a2d.GetChannelData(2)<<std::endl;
+    std::cout<<a2d.GetChannelData(0)<<std::endl;
 
     return(ret);
 }
