@@ -16,8 +16,10 @@
 #include <cstring>
 #include <memory>
 #include <queue>
+#include "MCP3008SPI.h"
 
 std::string inputstream = "";
+mcp3008Spi a2d("/dev/spidev0.0", SPI_MODE_0, 1000000, 8);
 
 std::unordered_map<unsigned int, Object*> gObjects[50];
 int count[50];
@@ -132,6 +134,9 @@ bool Input ( void )
       }
 
     }
+    
+    std::cout<<a2d.GetChannelData(1)<<std::endl;
+    std::cout<<a2d.GetChannelData(2)<<std::endl;
 
     return(ret);
 }
