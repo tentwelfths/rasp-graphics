@@ -44,6 +44,7 @@ public:
     mcp3008Spi(std::string devspi, unsigned char spiMode, unsigned int spiSpeed, unsigned char spibitsPerWord);
     ~mcp3008Spi();
     int spiWriteRead( unsigned char *data, int length);
+    int GetChannelData(int a2dChannel);
      
 private:
     unsigned char mode;

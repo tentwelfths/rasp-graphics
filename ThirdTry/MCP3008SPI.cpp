@@ -1,5 +1,22 @@
 #include "MCP3008SPI.h"
 using namespace std;
+
+int mcp3008Spi::GetChannelData(int a2dChannel)
+{
+  int a2dVal = 0;
+  unsigned char data[3];
+  data[0] = 1;  //  first byte transmitted -> start bit
+  data[1] = 0b10000000 |( ((a2dChannel & 7) << 4)); // second byte transmitted -> (SGL/DIF = 1, D2=D1=D0=0)
+  data[2] = 0; // third byte transmitted....don't care
+  
+  a2d.spiWriteRead(data, sizeof(data) );
+  
+  a2dVal = 0;
+          a2dVal = (data[1]<< 8) & 0b1100000000; //merge data[1] & data[2] to get result
+          a2dVal |=  (data[2] & 0xff);
+  ////sleep(1);
+  //std::cout << "The Result is: " << a2dVal << std::endl;
+}
 /**********************************************************
  * spiOpen() :function is called by the constructor.
  * It is responsible for opening the spidev device
