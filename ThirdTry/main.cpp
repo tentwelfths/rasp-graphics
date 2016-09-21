@@ -237,6 +237,7 @@ int main ( int argc, char *argv[] )
   
   GraphicsSystem g;
   NetworkingSystem n(27015, "192.168.77.106");
+  std::cout<<"CONNECTED"<<std::endl;
   int res = n.Send("HELLO", strlen("HELLO"));
   //std::cout<<res<<std::endl;
   //return 0;
