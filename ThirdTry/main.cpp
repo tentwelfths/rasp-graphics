@@ -269,7 +269,7 @@ int main ( int argc, char *argv[] )
       //std::cout<<"Tryna recv"<<std::endl;
       netResult = n.Receive((buf),1023);
       
-      std::cout<<"netResult: "<<netResult<<std::endl;
+      //std::cout<<"netResult: "<<netResult<<std::endl;
       pos = 0;
       if(netResult > 0)
       {
