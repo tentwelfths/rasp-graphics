@@ -310,6 +310,7 @@ int main ( int argc, char *argv[] )
     
     gettimeofday(&t2, &tz);
     deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
+    std::cout<<deltatime<<std::endl;
     if(deltatime >= 1.0f/30.f)
     {
       //Frame took too long
