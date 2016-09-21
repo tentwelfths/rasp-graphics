@@ -182,10 +182,10 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
     std::cout<<frame<<":"<<lastFrameSeen<<std::endl;
     if(!(frame > lastFrameSeen || (frame < 50 && lastFrameSeen > (unsigned short)(-1) - 50))) return;
     lastFrameSeen = frame;
-    int count =0;
+    int counter =0;
     while(pos < len)
     {
-      ++count;
+      ++counter;
       std::cout<<"Getting Object"<<std::endl;
       std::cout<<"Response found an object!!!!"<<std::endl;
       unsigned int objectID = *static_cast<const unsigned int *>(static_cast<const void *>(&(command[pos])));
@@ -227,7 +227,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
       temp->textureID = textureID;
       temp->inUse = true;
     }
-    std::cout<<"\t\t\t\tUPDATING #"<<count<<" OBJECTS"<<std::endl;
+    std::cout<<"\t\t\t\tUPDATING #"<<counter<<" OBJECTS"<<std::endl;
   }
 }
 
