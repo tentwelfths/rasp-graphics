@@ -85,7 +85,7 @@ bool Input ( void )
         }
       }
     } while (dp != NULL);
-    std::cout<<"...."<<std::endl;
+    //std::cout<<"...."<<std::endl;
     closedir(dirp);
 
 
@@ -126,7 +126,7 @@ bool Input ( void )
               inputstream += ((unsigned char *)(&evp->code))[i];
             inputstream += '1';
           }
-          std::cout<<evp->code<<" --- "<<evp->value<<std::endl;
+          //std::cout<<evp->code<<" --- "<<evp->value<<std::endl;
           
           if((evp->code == KEY_Q) && (evp->value == 1))
               ret = false;
@@ -179,38 +179,38 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
     int pos = 1;
     unsigned short frame = *static_cast<const unsigned short *>(static_cast<const void *>(&(command[pos])));
     pos += sizeof(unsigned short);
-    std::cout<<frame<<":"<<lastFrameSeen<<std::endl;
+    //std::cout<<frame<<":"<<lastFrameSeen<<std::endl;
     if(!(frame > lastFrameSeen || (frame < 50 && lastFrameSeen > (unsigned short)(-1) - 50))) return;
     lastFrameSeen = frame;
     int counter =0;
     while(pos < len)
     {
       ++counter;
-      std::cout<<"Getting Object"<<std::endl;
-      std::cout<<"Response found an object!!!!"<<std::endl;
+      //std::cout<<"Getting Object"<<std::endl;
+      //std::cout<<"Response found an object!!!!"<<std::endl;
       unsigned int objectID = *static_cast<const unsigned int *>(static_cast<const void *>(&(command[pos])));
       pos += sizeof(unsigned int);
       const unsigned int textureID = *reinterpret_cast<const unsigned int*>(&(command[pos]));
-      std::cout<<"Object with textID "<<textureID<<" #"<<count[textureID]<<std::endl;
-      std::cout<<pos<<"-"<<len <<" TextureID: "<< textureID <<std::endl;
+      //std::cout<<"Object with textID "<<textureID<<" #"<<count[textureID]<<std::endl;
+      //std::cout<<pos<<"-"<<len <<" TextureID: "<< textureID <<std::endl;
       pos += sizeof(unsigned int);
       const float xPos = *reinterpret_cast<const float*>(&(command[pos]));
-      std::cout<<pos<<"+"<<len <<" xPos: "<< xPos <<std::endl;
+      //std::cout<<pos<<"+"<<len <<" xPos: "<< xPos <<std::endl;
       pos += sizeof(float);
       const float yPos = *reinterpret_cast<const float*>(&(command[pos]));
-      std::cout<<pos<<"="<<len <<" yPos: "<< yPos <<std::endl;
+      //std::cout<<pos<<"="<<len <<" yPos: "<< yPos <<std::endl;
       pos += sizeof(float);
       const float zPos = *reinterpret_cast<const float*>(&(command[pos]));
-      std::cout<<pos<<"]"<<len <<" zPos: "<< zPos <<std::endl;
+      //std::cout<<pos<<"]"<<len <<" zPos: "<< zPos <<std::endl;
       pos += sizeof(float);
       const float xSca = *reinterpret_cast<const float*>(&(command[pos]));
-      std::cout<<pos<<"["<<len <<" xSca: "<< xSca <<std::endl;
+      //std::cout<<pos<<"["<<len <<" xSca: "<< xSca <<std::endl;
       pos += sizeof(float);
       const float ySca = *reinterpret_cast<const float*>(&(command[pos]));
-      std::cout<<pos<<"*"<<len <<" ySca: "<< ySca <<std::endl;
+      //std::cout<<pos<<"*"<<len <<" ySca: "<< ySca <<std::endl;
       pos += sizeof(float);
       const float rot  = *reinterpret_cast<const float*>(&(command[pos]));
-      std::cout<<pos<<"~"<<len <<" rot: "<< rot <<std::endl;
+      //std::cout<<pos<<"~"<<len <<" rot: "<< rot <<std::endl;
       pos += sizeof(float);
       
       if(gObjects[textureID].find(objectID) == gObjects[textureID].end())
@@ -255,12 +255,14 @@ int main ( int argc, char *argv[] )
   int clientNumber = -1;
   int netResult = 0;
   struct timeval t1, t2;
+  struct timeval tStart,tEnd;
   struct timezone tz;
-  float deltatime;
-  while(Input()){
+  float deltatime, gDt, rDt,sDt,iDt;
+  while(true){
     //std::cout<<"loop"<<std::endl;
     gettimeofday ( &t1 , &tz );
     bool updated = false;
+    gettimeofday ( &tStart , &tz );
     do{
       memset((void*)buf, 0, 1024);
       //std::cout<<"Tryna recv"<<std::endl;
@@ -273,9 +275,15 @@ int main ( int argc, char *argv[] )
         ProcessResponse(pos, clientNumber, buf, netResult);
       }
     }while(netResult > 0);
+    gettimeofday ( &tEnd , &tz );
+    rDt = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
+    gettimeofday ( &tStart , &tz );
     g.Draw();
+    gettimeofday ( &tEnd , &tz );
+    gDt = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
     toSend = !toSend;
     inputstream = "~";
+    gettimeofday ( &tStart , &tz );
     unsigned short x = a2d.GetChannelData(0);
     unsigned short y = a2d.GetChannelData(1);
     for(unsigned i = 0; i < sizeof(unsigned short); ++i){
@@ -291,11 +299,24 @@ int main ( int argc, char *argv[] )
       std::vector<char> v(inputstream.length() + 1);
       for(unsigned i = 0; i < inputstream.length(); ++i)v[i] = inputstream[i];
       char* pc = &v[0];
-      std::cout<<inputstream<<std::endl;
-      std::cout<<"Bytes sent: "<<n.Send(pc, inputstream.length())<<std::endl;
+      //std::cout<<inputstream<<std::endl;
+      //std::cout<<"Bytes sent: "<<n.Send(pc, inputstream.length())<<std::endl;
       inputstream = "";
     }
+    gettimeofday ( &tEnd , &tz );
+    iDt = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
     
+    gettimeofday(&t2, &tz);
+    deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
+    if(deltatime >= 1.0f/30.f)
+    {
+      //Frame took too long
+      float total = gDt + rDt + iDt;
+      std::cout<<"Graphics: " << (gDt / total) * 100.f <<"%"<<std::endl
+      <<"Input: " << (iDt / total) * 100.f <<"%"<<std::endl
+      <<"Receiving: " << (rDt / total) * 100.f <<"%"<<std::endl<<std::endl;
+      
+    }
     do{
       gettimeofday(&t2, &tz);
       deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
