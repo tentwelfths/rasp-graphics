@@ -319,10 +319,10 @@ int main ( int argc, char *argv[] )
       <<"Receiving: " << (rDt / total) * 100.f <<"%"<<std::endl<<std::endl;
       
     }
-    do{
-      gettimeofday(&t2, &tz);
-      deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
-    }while(deltatime < 1.0f/30.0f);
+    //do{
+    //  gettimeofday(&t2, &tz);
+    //  deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
+    //}while(deltatime < 1.0f/30.0f);
   }
   return 0;
 }
