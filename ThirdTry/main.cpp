@@ -126,7 +126,7 @@ bool Input ( void )
               inputstream += ((unsigned char *)(&evp->code))[i];
             inputstream += '1';
           }
-          std::cout<<evp->code<<" --- "<<evp->value<<std::endl;
+          //std::cout<<evp->code<<" --- "<<evp->value<<std::endl;
           
           if((evp->code == KEY_Q) && (evp->value == 1))
               ret = false;
@@ -179,38 +179,38 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
     int pos = 1;
     unsigned short frame = *static_cast<const unsigned short *>(static_cast<const void *>(&(command[pos])));
     pos += sizeof(unsigned short);
-    std::cout<<frame<<":"<<lastFrameSeen<<std::endl;
+    //std::cout<<frame<<":"<<lastFrameSeen<<std::endl;
     if(!(frame > lastFrameSeen || (frame < 50 && lastFrameSeen > (unsigned short)(-1) - 50))) return;
     lastFrameSeen = frame;
     int counter =0;
     while(pos < len)
     {
       ++counter;
-      std::cout<<"Getting Object"<<std::endl;
-      std::cout<<"Response found an object!!!!"<<std::endl;
+      //std::cout<<"Getting Object"<<std::endl;
+      //std::cout<<"Response found an object!!!!"<<std::endl;
       unsigned int objectID = *static_cast<const unsigned int *>(static_cast<const void *>(&(command[pos])));
       pos += sizeof(unsigned int);
       const unsigned int textureID = *reinterpret_cast<const unsigned int*>(&(command[pos]));
-      std::cout<<"Object with textID "<<textureID<<" #"<<count[textureID]<<std::endl;
-      std::cout<<pos<<"-"<<len <<" TextureID: "<< textureID <<std::endl;
+      //std::cout<<"Object with textID "<<textureID<<" #"<<count[textureID]<<std::endl;
+      //std::cout<<pos<<"-"<<len <<" TextureID: "<< textureID <<std::endl;
       pos += sizeof(unsigned int);
       const float xPos = *reinterpret_cast<const float*>(&(command[pos]));
-      std::cout<<pos<<"+"<<len <<" xPos: "<< xPos <<std::endl;
+      //std::cout<<pos<<"+"<<len <<" xPos: "<< xPos <<std::endl;
       pos += sizeof(float);
       const float yPos = *reinterpret_cast<const float*>(&(command[pos]));
-      std::cout<<pos<<"="<<len <<" yPos: "<< yPos <<std::endl;
+      //std::cout<<pos<<"="<<len <<" yPos: "<< yPos <<std::endl;
       pos += sizeof(float);
       const float zPos = *reinterpret_cast<const float*>(&(command[pos]));
-      std::cout<<pos<<"]"<<len <<" zPos: "<< zPos <<std::endl;
+      //std::cout<<pos<<"]"<<len <<" zPos: "<< zPos <<std::endl;
       pos += sizeof(float);
       const float xSca = *reinterpret_cast<const float*>(&(command[pos]));
-      std::cout<<pos<<"["<<len <<" xSca: "<< xSca <<std::endl;
+      //std::cout<<pos<<"["<<len <<" xSca: "<< xSca <<std::endl;
       pos += sizeof(float);
       const float ySca = *reinterpret_cast<const float*>(&(command[pos]));
-      std::cout<<pos<<"*"<<len <<" ySca: "<< ySca <<std::endl;
+      //std::cout<<pos<<"*"<<len <<" ySca: "<< ySca <<std::endl;
       pos += sizeof(float);
       const float rot  = *reinterpret_cast<const float*>(&(command[pos]));
-      std::cout<<pos<<"~"<<len <<" rot: "<< rot <<std::endl;
+      //std::cout<<pos<<"~"<<len <<" rot: "<< rot <<std::endl;
       pos += sizeof(float);
       
       if(gObjects[textureID].find(objectID) == gObjects[textureID].end())
