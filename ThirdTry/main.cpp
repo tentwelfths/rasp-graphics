@@ -309,7 +309,7 @@ int main ( int argc, char *argv[] )
     iDt = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
     
     gettimeofday(&t2, &tz);
-    deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
+    deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec)/1000.f);
     std::cout<<deltatime<<std::endl;
     if(deltatime >= 1.0f/30.f)
     {
