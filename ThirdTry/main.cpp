@@ -85,7 +85,7 @@ bool Input ( void )
         }
       }
     } while (dp != NULL);
-    std::cout<<"...."<<std::endl;
+    //std::cout<<"...."<<std::endl;
     closedir(dirp);
 
 
@@ -237,6 +237,7 @@ int main ( int argc, char *argv[] )
   
   GraphicsSystem g;
   NetworkingSystem n(27015, "192.168.77.106");
+  std::cout<<"CONNECTED"<<std::endl;
   int res = n.Send("HELLO", strlen("HELLO"));
   //std::cout<<res<<std::endl;
   //return 0;
@@ -255,27 +256,35 @@ int main ( int argc, char *argv[] )
   int clientNumber = -1;
   int netResult = 0;
   struct timeval t1, t2;
+  struct timeval tStart,tEnd;
   struct timezone tz;
-  float deltatime;
-  while(Input()){
+  float deltatime, gDt, rDt,sDt,iDt;
+  while(true){
     //std::cout<<"loop"<<std::endl;
     gettimeofday ( &t1 , &tz );
     bool updated = false;
+    gettimeofday ( &tStart , &tz );
     do{
       memset((void*)buf, 0, 1024);
       //std::cout<<"Tryna recv"<<std::endl;
       netResult = n.Receive((buf),1023);
       
-      //std::cout<<"netResult: "<<netResult<<std::endl;
+      std::cout<<"netResult: "<<netResult<<std::endl;
       pos = 0;
       if(netResult > 0)
       {
         ProcessResponse(pos, clientNumber, buf, netResult);
       }
     }while(netResult > 0);
+    gettimeofday ( &tEnd , &tz );
+    rDt = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
+    gettimeofday ( &tStart , &tz );
     g.Draw();
+    gettimeofday ( &tEnd , &tz );
+    gDt = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
     toSend = !toSend;
     inputstream = "~";
+    gettimeofday ( &tStart , &tz );
     unsigned short x = a2d.GetChannelData(0);
     unsigned short y = a2d.GetChannelData(1);
     for(unsigned i = 0; i < sizeof(unsigned short); ++i){
@@ -291,11 +300,25 @@ int main ( int argc, char *argv[] )
       std::vector<char> v(inputstream.length() + 1);
       for(unsigned i = 0; i < inputstream.length(); ++i)v[i] = inputstream[i];
       char* pc = &v[0];
-      std::cout<<inputstream<<std::endl;
-      std::cout<<"Bytes sent: "<<n.Send(pc, inputstream.length())<<std::endl;
+      //std::cout<<inputstream<<std::endl;
+      int sentbytes = n.Send(pc, inputstream.length())
+      //std::cout<<"Bytes sent: "<<sentbytes<<std::endl;
       inputstream = "";
     }
+    gettimeofday ( &tEnd , &tz );
+    iDt = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
     
+    gettimeofday(&t2, &tz);
+    deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
+    if(deltatime >= 1.0f/30.f)
+    {
+      //Frame took too long
+      float total = gDt + rDt + iDt;
+      std::cout<<"Graphics: " << (gDt / total) * 100.f <<"%"<<std::endl
+      <<"Input: " << (iDt / total) * 100.f <<"%"<<std::endl
+      <<"Receiving: " << (rDt / total) * 100.f <<"%"<<std::endl<<std::endl;
+      
+    }
     do{
       gettimeofday(&t2, &tz);
       deltatime = (float)(t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) * 1e-6);
