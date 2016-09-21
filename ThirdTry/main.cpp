@@ -301,7 +301,7 @@ int main ( int argc, char *argv[] )
       for(unsigned i = 0; i < inputstream.length(); ++i)v[i] = inputstream[i];
       char* pc = &v[0];
       //std::cout<<inputstream<<std::endl;
-      int sentbytes = n.Send(pc, inputstream.length())
+      int sentbytes = n.Send(pc, inputstream.length());
       //std::cout<<"Bytes sent: "<<sentbytes<<std::endl;
       inputstream = "";
     }
