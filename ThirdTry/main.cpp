@@ -196,6 +196,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
       for(unsigned char i = 0; i < textureNameLength; ++i){
         textureName += (char)command[pos++];
       }
+      std::cout<<"TEXTURE NAME: "<<textureName<<std::endl;
       //std::cout<<"Object with textID "<<textureID<<" #"<<count[textureID]<<std::endl;
       //std::cout<<pos<<"-"<<len <<" TextureID: "<< textureID <<std::endl;
       
@@ -319,10 +320,10 @@ int main ( int argc, char *argv[] )
     if(deltatime >= 1.0f/30.f)
     {
       //Frame took too long
-      float total = gDt + rDt + iDt;
-      std::cout<<"Graphics: " << (gDt / total) * 100.f <<"%"<<std::endl
-      <<"Input: " << (iDt / total) * 100.f <<"%"<<std::endl
-      <<"Receiving: " << (rDt / total) * 100.f <<"%"<<std::endl<<std::endl;
+      //float total = gDt + rDt + iDt;
+      //std::cout<<"Graphics: " << (gDt / total) * 100.f <<"%"<<std::endl
+      //<<"Input: " << (iDt / total) * 100.f <<"%"<<std::endl
+      //<<"Receiving: " << (rDt / total) * 100.f <<"%"<<std::endl<<std::endl;
       
     }
     //do{
