@@ -248,6 +248,7 @@ int main ( int argc, char *argv[] )
   //std::cout<<res<<std::endl;
   //return 0;
   g.LoadPngToTexture("Kakka_Carrot_Veggie.png");
+  g.LoadPngToTexture("Key.png");
   //Object a;
   //a.position[0] = 0;
   //a.position[1] = 0;
