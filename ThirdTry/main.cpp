@@ -217,7 +217,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
       const float rot  = *reinterpret_cast<const float*>(&(command[pos]));
       //std::cout<<pos<<"~"<<len <<" rot: "<< rot <<std::endl;
       pos += sizeof(float);
-      int textureID = g.mTextures[textureName];
+      int textureID = g->mTextures[textureName];
       if(gObjects[textureID].find(objectID) == gObjects[textureID].end())
       {
         gObjects[textureID].insert({objectID, new Object()});
