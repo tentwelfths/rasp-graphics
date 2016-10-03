@@ -157,7 +157,7 @@ std::queue<std::string> commands;
 std::string unfinished = "";
 unsigned short lastFrameSeen = 0;
 
-void ProcessResponse(int& pos, int & clientNumber, const char * command, int len)
+void ProcessResponse(int& pos, int & clientNumber, const char * command, int len, GraphicsSystem * g)
 {
   //for (int i = 0; i < len; ++i)
   //{
@@ -217,7 +217,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
       const float rot  = *reinterpret_cast<const float*>(&(command[pos]));
       //std::cout<<pos<<"~"<<len <<" rot: "<< rot <<std::endl;
       pos += sizeof(float);
-      
+      int textureID = g.mTextures[textureName];
       if(gObjects[textureID].find(objectID) == gObjects[textureID].end())
       {
         gObjects[textureID].insert({objectID, new Object()});
@@ -278,7 +278,7 @@ int main ( int argc, char *argv[] )
       pos = 0;
       if(netResult > 0)
       {
-        ProcessResponse(pos, clientNumber, buf, netResult);
+        ProcessResponse(pos, clientNumber, buf, netResult, &g);
       }
     }while(netResult > 0);
     gettimeofday ( &tEnd , &tz );
