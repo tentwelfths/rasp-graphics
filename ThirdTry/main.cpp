@@ -198,7 +198,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
       }
       std::cout<<"TEXTURE NAME: "<<textureName<<std::endl;
       for(auto & iter : g->mTextures){
-        std::cout<<iter.first<<strcmp(textureName, iter.first)<<std::endl;
+        std::cout<<iter.first<<strcmp(textureName.c_str(), iter.first.c_str())<<std::endl;
       }
       //std::cout<<"Object with textID "<<textureID<<" #"<<count[textureID]<<std::endl;
       //std::cout<<pos<<"-"<<len <<" TextureID: "<< textureID <<std::endl;
