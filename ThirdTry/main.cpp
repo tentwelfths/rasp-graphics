@@ -197,10 +197,12 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
         textureName += (char)command[pos++];
       }
       std::cout<<"TEXTURE NAME: "<<textureName<<std::endl;
+      int textureID = -1;
       for(auto & iter : g->mTextures){
         std::cout<<iter.first<<" "<<strcmp(textureName.c_str(), iter.first.c_str())<<std::endl;
         if(strcmp(textureName.c_str(), iter.first.c_str()) == 0){
           std::cout<<"MATCH FOUND " << iter.second.textureID;
+          textureID = iter.second.textureID;
         }
       }
       //std::cout<<"Object with textID "<<textureID<<" #"<<count[textureID]<<std::endl;
@@ -224,7 +226,9 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
       const float rot  = *reinterpret_cast<const float*>(&(command[pos]));
       //std::cout<<pos<<"~"<<len <<" rot: "<< rot <<std::endl;
       pos += sizeof(float);
-      int textureID = g->mTextures[textureName].textureID;
+      if(textureID == -1){
+        std::cout<<"Texture "<<textureName<<" not found"<<std::endl; continue;
+      }
       if(gObjects[textureID].find(objectID) == gObjects[textureID].end())
       {
         gObjects[textureID].insert({objectID, new Object()});
