@@ -196,15 +196,13 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
       for(unsigned char i = 0; i < textureNameLength; ++i){
         textureName += (char)command[pos++];
       }
-      std::cout<<"TEXTURE NAME: "<<textureName<<std::endl;
-      int textureID = -1;
-      for(auto & iter : g->mTextures){
-        std::cout<<iter.first<<" "<<strcmp(textureName.c_str(), iter.first.c_str())<<std::endl;
-        if(strcmp(textureName.c_str(), iter.first.c_str()) == 0){
-          std::cout<<"MATCH FOUND " << iter.second.textureID;
-          textureID = iter.second.textureID;
-        }
-      }
+      //std::cout<<"TEXTURE NAME: "<<textureName<<std::endl;
+      //for(auto & iter : g->mTextures){
+      //  std::cout<<iter.first<<" "<<strcmp(textureName.c_str(), iter.first.c_str())<<std::endl;
+      //  if(strcmp(textureName.c_str(), iter.first.c_str()) == 0){
+      //    std::cout<<"MATCH FOUND " << iter.second.textureID;
+      //  }
+      //}
       //std::cout<<"Object with textID "<<textureID<<" #"<<count[textureID]<<std::endl;
       //std::cout<<pos<<"-"<<len <<" TextureID: "<< textureID <<std::endl;
       
@@ -226,9 +224,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
       const float rot  = *reinterpret_cast<const float*>(&(command[pos]));
       //std::cout<<pos<<"~"<<len <<" rot: "<< rot <<std::endl;
       pos += sizeof(float);
-      if(textureID == -1){
-        std::cout<<"Texture "<<textureName<<" not found"<<std::endl; continue;
-      }
+      int textureID = g->mTextures[textureName].textureID;
       if(gObjects[textureID].find(objectID) == gObjects[textureID].end())
       {
         gObjects[textureID].insert({objectID, new Object()});
@@ -243,7 +239,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
       temp->textureID = textureID;
       temp->inUse = true;
     }
-    std::cout<<"\t\t\t\tUPDATING #"<<counter<<" OBJECTS"<<std::endl;
+    //std::cout<<"\t\t\t\tUPDATING #"<<counter<<" OBJECTS"<<std::endl;
   }
 }
 
