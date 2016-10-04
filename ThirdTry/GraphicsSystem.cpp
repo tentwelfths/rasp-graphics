@@ -568,7 +568,7 @@ void GraphicsSystem::LoadPngToTexture(const char * filename)
     return;
   }
   std::string temp = filename;
-  temp = temp.substr(0, temp.find_last_of('.'));
+  //temp = temp.substr(0, temp.find_last_of('.'));
   TextureType t;
   t.name = temp;
   t.textureID = myPNG;
