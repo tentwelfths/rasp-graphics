@@ -258,7 +258,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
         if(gObjectMap.find(objectID) != gObjectMap.end()){
           gObjectMap[objectID]->inUse = false;
         }
-        std::string temp = '%';
+        std::string temp = "%";
         for(unsigned i = 0; i < sizeof(unsigned int); ++i)
         {
           temp += static_cast<const unsigned char *>(static_cast<const void *>(&(objectID)))[i];
