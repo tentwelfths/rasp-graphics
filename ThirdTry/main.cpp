@@ -280,8 +280,9 @@ int main ( int argc, char *argv[] )
   int res = n.Send("HELLO", strlen("HELLO"));
   //std::cout<<res<<std::endl;
   //return 0;
-  g.LoadPngToTexture("Kakka_Carrot_Veggie.png");
-  g.LoadPngToTexture("Key.png");
+  g.LoadPngToTexture("bolt.png");
+  g.LoadPngToTexture("rock.png");
+  g.LoadPngToTexture("player.png");
   //Object a;
   //a.position[0] = 0;
   //a.position[1] = 0;
