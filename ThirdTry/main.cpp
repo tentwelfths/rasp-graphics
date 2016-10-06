@@ -180,7 +180,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
     int pos = 0;
     unsigned short frame = *static_cast<const unsigned short *>(static_cast<const void *>(&(command[pos])));
     pos += sizeof(unsigned short);
-    std::cout<<frame<<":"<<lastFrameSeen<<std::endl;
+    //std::cout<<frame<<":"<<lastFrameSeen<<std::endl;
     if(!(frame > lastFrameSeen || (frame < 50 && lastFrameSeen > (unsigned short)(-1) - 50))) return;
     lastFrameSeen = frame;
     int counter =0;
@@ -194,7 +194,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
       {
         ++pos;
         ++counter;
-        std::cout<<"Getting Object"<<std::endl;
+        //std::cout<<"Getting Object"<<std::endl;
         //std::cout<<"Response found an object!!!!"<<std::endl;
         unsigned int objectID = *static_cast<const unsigned int *>(static_cast<const void *>(&(command[pos])));
         pos += sizeof(unsigned int);
@@ -252,6 +252,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
       else if(command[pos] == '%')//DEATH
       {
         ++pos;
+        std::cout<<"FUCK YOU DIE"<<std::endl;
         unsigned int objectID = *static_cast<const unsigned int *>(static_cast<const void *>(&(command[pos])));
         pos += sizeof(unsigned int);
         if(gObjectMap.find(objectID) != gObjectMap.end()){
@@ -335,7 +336,7 @@ int main ( int argc, char *argv[] )
       char* pc = &v[0];
       //std::cout<<inputstream<<std::endl;
       int sentbytes = n.Send(pc, inputstream.length());
-      std::cout<<"Bytes sent: "<<sentbytes<<inputstream<<std::endl;
+      //std::cout<<"Bytes sent: "<<sentbytes<<inputstream<<std::endl;
       inputstream = "";
     }
     gettimeofday ( &tEnd , &tz );
