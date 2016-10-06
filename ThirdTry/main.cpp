@@ -186,7 +186,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
     int counter =0;
     while(pos < len)
     {
-      std::cout<<(int)command[pos]<<std::endl;
+      //std::cout<<(int)command[pos]<<std::endl;
       //if(command[pos] == 0){
       //  ++pos; continue;
       //}
@@ -194,7 +194,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
       {
         ++pos;
         ++counter;
-        //std::cout<<"Getting Object"<<std::endl;
+        std::cout<<"Getting Object"<<std::endl;
         //std::cout<<"Response found an object!!!!"<<std::endl;
         unsigned int objectID = *static_cast<const unsigned int *>(static_cast<const void *>(&(command[pos])));
         pos += sizeof(unsigned int);
