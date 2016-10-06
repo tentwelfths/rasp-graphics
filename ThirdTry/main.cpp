@@ -187,9 +187,9 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
     while(pos < len)
     {
       std::cout<<(int)command[pos]<<std::endl;
-      if(command[pos] == 0){
-        ++pos; continue;
-      }
+      //if(command[pos] == 0){
+      //  ++pos; continue;
+      //}
       if (command[pos] == '`')//object
       {
         ++pos;
