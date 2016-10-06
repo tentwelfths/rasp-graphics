@@ -158,7 +158,7 @@ std::queue<std::string> commands;
 std::string unfinished = "";
 unsigned short lastFrameSeen = 0;
 
-void ProcessResponse(int& pos, int & clientNumber, const char * command, int len, GraphicsSystem * g)
+void ProcessResponse(int& pos, int & clientNumber, const char * command, int len, GraphicsSystem * g, NetworkingSystem * n)
 {
   //for (int i = 0; i < len; ++i)
   //{
@@ -258,6 +258,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
         if(gObjectMap.find(objectID) != gObjectMap.end()){
           gObjectMap[objectID]->inUse = false;
         }
+         n->Send(pc, inputstream.length());
       }
     }
     //std::cout<<"\t\t\t\tUPDATING #"<<counter<<" OBJECTS"<<std::endl;
@@ -307,7 +308,7 @@ int main ( int argc, char *argv[] )
       pos = 0;
       if(netResult > 0)
       {
-        ProcessResponse(pos, clientNumber, buf, netResult, &g);
+        ProcessResponse(pos, clientNumber, buf, netResult, &g, &n);
       }
     }while(netResult > 0);
     gettimeofday ( &tEnd , &tz );
