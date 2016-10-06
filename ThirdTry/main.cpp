@@ -22,6 +22,7 @@ std::string inputstream = "";
 //mcp3008Spi a2d("/dev/spidev0.0", SPI_MODE_0, 1000000, 8);
 
 std::unordered_map<unsigned int, Object*> gObjects[50];
+std::unordered_map<unsigned int, Object*> gObjectMap;
 int count[50];
 
 bool Input ( void )
@@ -174,7 +175,7 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
   {
     clientNumber = (int)((unsigned char)command[1]);
   } 
-  if (command[0] == '`')//objects
+  else
   {
     int pos = 1;
     unsigned short frame = *static_cast<const unsigned short *>(static_cast<const void *>(&(command[pos])));
@@ -185,59 +186,74 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
     int counter =0;
     while(pos < len)
     {
-      ++counter;
-      //std::cout<<"Getting Object"<<std::endl;
-      //std::cout<<"Response found an object!!!!"<<std::endl;
-      unsigned int objectID = *static_cast<const unsigned int *>(static_cast<const void *>(&(command[pos])));
-      pos += sizeof(unsigned int);
-      const unsigned char textureNameLength = *reinterpret_cast<const unsigned char*>(&(command[pos]));
-      pos += sizeof(unsigned char);
-      std::string textureName = "";
-      for(unsigned char i = 0; i < textureNameLength; ++i){
-        textureName += (char)command[pos++];
-      }
-      //std::cout<<"TEXTURE NAME: "<<textureName<<std::endl;
-      //for(auto & iter : g->mTextures){
-      //  std::cout<<iter.first<<" "<<strcmp(textureName.c_str(), iter.first.c_str())<<std::endl;
-      //  if(strcmp(textureName.c_str(), iter.first.c_str()) == 0){
-      //    std::cout<<"MATCH FOUND " << iter.second.textureID;
-      //  }
-      //}
-      //std::cout<<"Object with textID "<<textureID<<" #"<<count[textureID]<<std::endl;
-      //std::cout<<pos<<"-"<<len <<" TextureID: "<< textureID <<std::endl;
-      
-      const float xPos = *reinterpret_cast<const float*>(&(command[pos]));
-      //std::cout<<pos<<"+"<<len <<" xPos: "<< xPos <<std::endl;
-      pos += sizeof(float);
-      const float yPos = *reinterpret_cast<const float*>(&(command[pos]));
-      //std::cout<<pos<<"="<<len <<" yPos: "<< yPos <<std::endl;
-      pos += sizeof(float);
-      const float zPos = *reinterpret_cast<const float*>(&(command[pos]));
-      //std::cout<<pos<<"]"<<len <<" zPos: "<< zPos <<std::endl;
-      pos += sizeof(float);
-      const float xSca = *reinterpret_cast<const float*>(&(command[pos]));
-      //std::cout<<pos<<"["<<len <<" xSca: "<< xSca <<std::endl;
-      pos += sizeof(float);
-      const float ySca = *reinterpret_cast<const float*>(&(command[pos]));
-      //std::cout<<pos<<"*"<<len <<" ySca: "<< ySca <<std::endl;
-      pos += sizeof(float);
-      const float rot  = *reinterpret_cast<const float*>(&(command[pos]));
-      //std::cout<<pos<<"~"<<len <<" rot: "<< rot <<std::endl;
-      pos += sizeof(float);
-      int textureID = g->mTextures[textureName].textureID;
-      if(gObjects[textureID].find(objectID) == gObjects[textureID].end())
+      if (command[pos] == '`')//object
       {
-        gObjects[textureID].insert({objectID, new Object()});
+        ++pos;
+        ++counter;
+        //std::cout<<"Getting Object"<<std::endl;
+        //std::cout<<"Response found an object!!!!"<<std::endl;
+        unsigned int objectID = *static_cast<const unsigned int *>(static_cast<const void *>(&(command[pos])));
+        pos += sizeof(unsigned int);
+        const unsigned char textureNameLength = *reinterpret_cast<const unsigned char*>(&(command[pos]));
+        pos += sizeof(unsigned char);
+        std::string textureName = "";
+        for(unsigned char i = 0; i < textureNameLength; ++i){
+          textureName += (char)command[pos++];
+        }
+        //std::cout<<"TEXTURE NAME: "<<textureName<<std::endl;
+        //for(auto & iter : g->mTextures){
+        //  std::cout<<iter.first<<" "<<strcmp(textureName.c_str(), iter.first.c_str())<<std::endl;
+        //  if(strcmp(textureName.c_str(), iter.first.c_str()) == 0){
+        //    std::cout<<"MATCH FOUND " << iter.second.textureID;
+        //  }
+        //}
+        //std::cout<<"Object with textID "<<textureID<<" #"<<count[textureID]<<std::endl;
+        //std::cout<<pos<<"-"<<len <<" TextureID: "<< textureID <<std::endl;
+        
+        const float xPos = *reinterpret_cast<const float*>(&(command[pos]));
+        //std::cout<<pos<<"+"<<len <<" xPos: "<< xPos <<std::endl;
+        pos += sizeof(float);
+        const float yPos = *reinterpret_cast<const float*>(&(command[pos]));
+        //std::cout<<pos<<"="<<len <<" yPos: "<< yPos <<std::endl;
+        pos += sizeof(float);
+        const float zPos = *reinterpret_cast<const float*>(&(command[pos]));
+        //std::cout<<pos<<"]"<<len <<" zPos: "<< zPos <<std::endl;
+        pos += sizeof(float);
+        const float xSca = *reinterpret_cast<const float*>(&(command[pos]));
+        //std::cout<<pos<<"["<<len <<" xSca: "<< xSca <<std::endl;
+        pos += sizeof(float);
+        const float ySca = *reinterpret_cast<const float*>(&(command[pos]));
+        //std::cout<<pos<<"*"<<len <<" ySca: "<< ySca <<std::endl;
+        pos += sizeof(float);
+        const float rot  = *reinterpret_cast<const float*>(&(command[pos]));
+        //std::cout<<pos<<"~"<<len <<" rot: "<< rot <<std::endl;
+        pos += sizeof(float);
+        int textureID = g->mTextures[textureName].textureID;
+        if(gObjects[textureID].find(objectID) == gObjects[textureID].end())
+        {
+          Object * obj = new Object();
+          gObjects[textureID].insert({objectID, obj});
+          gObjectMap.insert({objectID, obj});
+        }
+        Object * temp = gObjects[textureID][objectID];
+        temp->position[0] = xPos;
+        temp->position[1] = yPos;
+        temp->position[2] = zPos;
+        temp->scale[0] = xSca;
+        temp->scale[1] = ySca;
+        temp->rotation[2] = rot;
+        temp->textureID = textureID;
+        temp->inUse = true;
       }
-      Object * temp = gObjects[textureID][objectID];
-      temp->position[0] = xPos;
-      temp->position[1] = yPos;
-      temp->position[2] = zPos;
-      temp->scale[0] = xSca;
-      temp->scale[1] = ySca;
-      temp->rotation[2] = rot;
-      temp->textureID = textureID;
-      temp->inUse = true;
+      else if(command[pos] == '%')//DEATH
+      {
+        ++pos;
+        unsigned int objectID = *static_cast<const unsigned int *>(static_cast<const void *>(&(command[pos])));
+        pos += sizeof(unsigned int);
+        if(gObjectMap.find(objectID) != gObjectMap.end()){
+          gObjectMap[objectID]->inUse = false;
+        }
+      }
     }
     //std::cout<<"\t\t\t\tUPDATING #"<<counter<<" OBJECTS"<<std::endl;
   }
