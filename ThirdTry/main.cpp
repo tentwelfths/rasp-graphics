@@ -258,7 +258,12 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
         if(gObjectMap.find(objectID) != gObjectMap.end()){
           gObjectMap[objectID]->inUse = false;
         }
-         n->Send(pc, inputstream.length());
+        std::string temp = '%';
+        for(unsigned i = 0; i < sizeof(unsigned int); ++i)
+        {
+          temp += static_cast<const unsigned char *>(static_cast<const void *>(&(objectID)))[i];
+        } 
+        n->Send(temp.data(), temp.length());
       }
     }
     //std::cout<<"\t\t\t\tUPDATING #"<<counter<<" OBJECTS"<<std::endl;
