@@ -331,7 +331,7 @@ int main ( int argc, char *argv[] )
       char* pc = &v[0];
       //std::cout<<inputstream<<std::endl;
       int sentbytes = n.Send(pc, inputstream.length());
-      std::cout<<"Bytes sent: "<<sentbytes<<std::endl;
+      std::cout<<"Bytes sent: "<<sentbytes<<inputstream<<std::endl;
       inputstream = "";
     }
     gettimeofday ( &tEnd , &tz );
