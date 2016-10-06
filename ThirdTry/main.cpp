@@ -177,10 +177,10 @@ void ProcessResponse(int& pos, int & clientNumber, const char * command, int len
   } 
   else
   {
-    int pos = 1;
+    int pos = 0;
     unsigned short frame = *static_cast<const unsigned short *>(static_cast<const void *>(&(command[pos])));
     pos += sizeof(unsigned short);
-    //std::cout<<frame<<":"<<lastFrameSeen<<std::endl;
+    std::cout<<frame<<":"<<lastFrameSeen<<std::endl;
     if(!(frame > lastFrameSeen || (frame < 50 && lastFrameSeen > (unsigned short)(-1) - 50))) return;
     lastFrameSeen = frame;
     int counter =0;
